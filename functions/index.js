@@ -48,12 +48,17 @@ exports.viewReservations = onRequest(async (req, res) => {
   const snapshot = await query.get();
 
   // console.log(query);
-
+  let jsonReturnVals = {};
   if (snapshot.empty) {
     console.log("No documents found.");
   } else {
+
+    // REFERENCE: 
+    // https://stackoverflow.com/questions/16507222/create-json-object-dynamically-via-javascript-without-concate-strings
+    
     snapshot.forEach((doc) => {
       console.log(doc.id, "=>", doc.data());
+      jsonReturnVals[doc.id] = doc.data();
     });
   }
 
@@ -65,5 +70,6 @@ exports.viewReservations = onRequest(async (req, res) => {
   // Send back the contents of the query.
 
   res.setHeader("Content-Type", "application/json");
-  res.json();
+  // res.send(JSON.stringify(snapshot));
+  res.send(jsonReturnVals);
 });
