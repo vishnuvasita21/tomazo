@@ -41,16 +41,18 @@ exports.viewReservations = onRequest(async (req, res) => {
     console.log("Document data:", doc.data());
   }
 
-  const query = await db.collection("Reservations")
-      .where("UserID", "==", userID)
-      .get();
+  const query =  db.collection("Reservations")
+  // .where("UserID", "==", userID);
+  .where("UserID", "==", parseInt(userID));
+
+  const snapshot = await query.get();
 
   // console.log(query);
 
-  if (query.empty) {
+  if (snapshot.empty) {
     console.log("No documents found.");
   } else {
-    query.forEach((doc) => {
+    snapshot.forEach((doc) => {
       console.log(doc.id, "=>", doc.data());
     });
   }
