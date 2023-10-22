@@ -41,21 +41,19 @@ exports.viewReservations = onRequest(async (req, res) => {
     console.log("Document data:", doc.data());
   }
 
-  const query =  db.collection("Reservations")
+  const query = db.collection("Reservations")
   // .where("UserID", "==", userID);
-  .where("UserID", "==", parseInt(userID));
+      .where("UserID", "==", parseInt(userID));
 
   const snapshot = await query.get();
 
   // console.log(query);
-  let jsonReturnVals = {};
+  const jsonReturnVals = {};
   if (snapshot.empty) {
     console.log("No documents found.");
   } else {
-
-    // REFERENCE: 
+    // REFERENCE:
     // https://stackoverflow.com/questions/16507222/create-json-object-dynamically-via-javascript-without-concate-strings
-    
     snapshot.forEach((doc) => {
       console.log(doc.id, "=>", doc.data());
       jsonReturnVals[doc.id] = doc.data();
