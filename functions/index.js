@@ -15,39 +15,25 @@ initializeApp();
 // Take the text parameter passed to this HTTP endpoint and use it to
 // query the Firestore database.
 exports.viewReservations = onRequest(async (req, res) => {
+
   // Get the userID parameter.
   const userID = req.query.userID;
-  // console.log(typeof userID);
+
   // Retrieve reservations from Firestore using the Firebase Admin SDK.
   // #REFERENCE: Code taken from:
   // https://firebase.google.com/docs/firestore/query-data/queries#node.js
-  // const reservationListSnapshot = await getFirestore()
-  // .collection("Reservations")
-  // .where("UserID", "==", userID).get();
-
   // #REFERENCE: Code Modified From:
   // https://stackoverflow.com/questions/54328730/how-to-perform-a-firestore-query-inside-a-firebase-function
+  // REFERENCE: 
+  // https://firebase.google.com/docs/firestore/query-data/get-data#node.js
+
   const db = getFirestore();
 
-  // console.log("DB DETAILS:");
-  // console.log(db);
-
-  // Reference: https://firebase.google.com/docs/firestore/query-data/get-data#node.js
-  const reservationRef = db.collection("Reservations").doc("ReservationID");
-  const doc = await reservationRef.get();
-  if (!doc.exists) {
-    console.log("No such document!");
-  } else {
-    console.log("Document data:", doc.data());
-  }
-
   const query = db.collection("Reservations")
-  // .where("UserID", "==", userID);
       .where("UserID", "==", parseInt(userID));
 
   const snapshot = await query.get();
 
-  // console.log(query);
   const jsonReturnVals = {};
   if (snapshot.empty) {
     console.log("No documents found.");
@@ -59,15 +45,47 @@ exports.viewReservations = onRequest(async (req, res) => {
       jsonReturnVals[doc.id] = doc.data();
     });
   }
+  // Send back the contents of the query.
+  res.setHeader("Content-Type", "application/json");
+  res.send(jsonReturnVals);
+});
 
-  // console.log(reservationListSnapshot);
-  // reservationListSnapshot.forEach((doc) => {
-  // console.log(doc.id, ' => ', doc.data());
-  // });
+// Take the text parameter passed to this HTTP endpoint and use it to
+// query the Firestore database.
+exports.bookReservation = onRequest(async (req, res) => {
 
+  // Get various request parameters.
+  const userID = req.query.userID;
+  const restaurantID = req.query.restaurantID;
+  const bookingStart = req.query.bookingStart;
+  const bookingEnd = req.query.bookingEnd;
+
+  console.log("userID:", userID);
+  console.log("restaurantID:", restaurantID);
+  console.log("bookingStart:", bookingStart);
+  console.log("bookingEnd", bookingEnd);
+
+  // Retrieve reservations from Firestore using the Firebase Admin SDK.
+  // #REFERENCE: Code taken from:
+  // https://firebase.google.com/docs/firestore/query-data/queries#node.js
+  // #REFERENCE: Code Modified From:
+  // https://stackoverflow.com/questions/54328730/how-to-perform-a-firestore-query-inside-a-firebase-function
+  const db = getFirestore();
+
+  // Reference: https://firebase.google.com/docs/firestore/query-data/get-data#node.js
+
+  const jsonReturnVals = {};
+
+  // Get restaurant open and close times (based on restaurantID)
+  // Ensure that the booking end is after the booking start.
+  // Ensure that the booking end is before the resturant closes.
+  // Ensure that the booking start is after the restaurant opens.
+  // If the three above conditions are satisfied, submit the booking.
+  // Otherwise, return an error.
+  
   // Send back the contents of the query.
 
   res.setHeader("Content-Type", "application/json");
-  // res.send(JSON.stringify(snapshot));
+  
   res.send(jsonReturnVals);
 });
