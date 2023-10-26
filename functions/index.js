@@ -79,31 +79,27 @@ exports.bookReservation = onRequest(async (req, res) => {
   // Get restaurant open and close times (based on restaurantID)
   // #REFERENCE: https://builtin.com/software-engineering-perspectives/javascript-api-call
   // #REFERENCE: https://stackoverflow.com/questions/32604460/xmlhttprequest-module-not-defined-found
-  var XMLHttpRequest = require('xhr2');
-  let request = new XMLHttpRequest();
-  let targetURL = "https://0520gbfb3k.execute-api.us-east-2.amazonaws.com/getRestaurantByID?restaurantID=";
+  // #REFERENCE: https://stackoverflow.com/questions/3038901/how-to-get-the-response-of-xmlhttprequest
+
+  let targetURL = "https://0520gbfb3k.execute-api.us-east-2.amazonaws.com/getRestaurantByID/";
   targetURL = targetURL.concat(restaurantID);
 
   console.log(targetURL);
 
-  request.open("GET", targetURL);
-  request.send();
+  const fetch = require("node-fetch");
 
-  let responseJSON = {};
-  request.onload = () => {
+  const responseJSON = await fetch(targetURL)
+  .then(response => response.json())
+  .catch((e)=> {});
 
-    if(request.status == 200){
-
-      responseJSON = JSON.parse(request.response);
-
-      console.log(responseJSON);
-
-    } else {
-      console.log('Error: ${request.status} ${request.statusText}');
-    }
-
-  }
   // Ensure that the booking end is after the booking start.
+  let openTime = responseJSON.Open;
+  let closeTime = responseJSON.Close;
+  console.log(openTime);
+  console.log(closeTime);
+
+  console.log(responseJSON);
+
   // Ensure that the booking end is before the resturant closes.
   // Ensure that the booking start is after the restaurant opens.
   // If the three above conditions are satisfied, submit the booking.
