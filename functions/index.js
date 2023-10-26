@@ -101,7 +101,17 @@ exports.bookReservation = onRequest(async (req, res) => {
   console.log(responseJSON);
 
   // Ensure that the booking end is before the resturant closes.
+  if((parseInt(bookingEnd) <= parseInt(closeTime)) 
+    && (parseInt(bookingStart) >= parseInt(openTime))){
+
+    console.log("Booking succeeded!");
+  } else{
+    console.log("Booking failed");
+  }
+
   // Ensure that the booking start is after the restaurant opens.
+
+
   // If the three above conditions are satisfied, submit the booking.
   // Otherwise, return an error.
   
