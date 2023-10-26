@@ -1,12 +1,7 @@
 const admin = require('firebase-admin');
 const { onRequest } = require("firebase-functions/v2/https");
 
-const serviceAccount = require("./cred.json");
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-  
-});
+admin.initializeApp();
 
 const firestore = admin.firestore();
 
