@@ -59,11 +59,13 @@ exports.bookReservation = onRequest(async (req, res) => {
   const restaurantID = req.query.restaurantID;
   const bookingStart = req.query.bookingStart;
   const bookingEnd = req.query.bookingEnd;
+  const bookingDate = req.query.bookingDate;
 
   console.log("userID:", userID);
   console.log("restaurantID:", restaurantID);
   console.log("bookingStart:", bookingStart);
   console.log("bookingEnd", bookingEnd);
+  console.log("bookingDate", bookingDate);
 
   // Retrieve reservations from Firestore using the Firebase Admin SDK.
   // #REFERENCE: Code taken from:
@@ -124,7 +126,8 @@ exports.bookReservation = onRequest(async (req, res) => {
         BookingEnd: bookingEnd,
         RestaurantID: parseInt(restaurantID),
         RestaurantName: restaurantName,
-        UserID: parseInt(userID)
+        UserID: parseInt(userID),
+        BookingDate: bookingDate
 
     };
 
