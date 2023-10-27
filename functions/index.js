@@ -145,15 +145,41 @@ exports.bookReservation = onRequest(async (req, res) => {
 exports.deleteReservation = onRequest(async (req, res) => {
 
   // Get reservation ID
-  const reservationID = req.query.reservationID;
+  const documentID = req.query.documentID;
 
   jsonReturnVals = {};
 
-  console.log("reservationID:", reservationID);
+  console.log("documentID:", documentID);
 
   const db = getFirestore();
 
-  const response = await db.collection("Reservations").doc(reservationID).delete();
+  const response = await db.collection("Reservations").doc(documentID).delete();
+
+  res.setHeader("Content-Type", "application/json");
+  
+  res.send(jsonReturnVals);
+
+});
+
+exports.updateReservation = onRequest(async (req, res) => {
+
+  // Get reservation ID
+  const documentID = req.query.documentID;
+  const userID = req.query.userID;
+  const restaurantID = req.query.restaurantID;
+  const bookingStart = req.query.bookingStart;
+  const bookingEnd = req.query.bookingEnd;
+
+  jsonReturnVals = {};
+
+  const db = getFirestore();
+
+  const response = await db.collection("Reservations").doc(documentID).update({
+
+    BookingEnd: bookingEnd,
+    BookingStart: bookingStart
+
+  });
 
   res.setHeader("Content-Type", "application/json");
   
