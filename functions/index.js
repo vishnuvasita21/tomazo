@@ -122,9 +122,9 @@ exports.bookReservation = onRequest(async (req, res) => {
 
         BookingStart: bookingStart,
         BookingEnd: bookingEnd,
-        RestaurantID: restaurantID,
+        RestaurantID: parseInt(restaurantID),
         RestaurantName: restaurantName,
-        UserID: userID
+        UserID: parseInt(userID)
 
     };
 
@@ -136,6 +136,24 @@ exports.bookReservation = onRequest(async (req, res) => {
   }
 
   // Send back the contents of the query.
+
+  res.setHeader("Content-Type", "application/json");
+  
+  res.send(jsonReturnVals);
+});
+
+exports.deleteReservation = onRequest(async (req, res) => {
+
+  // Get reservation ID
+  const reservationID = req.query.reservationID;
+
+  jsonReturnVals = {};
+
+  console.log("reservationID:", reservationID);
+
+  const db = getFirestore();
+
+  const response = await db.collection("Reservations").doc(reservationID).delete();
 
   res.setHeader("Content-Type", "application/json");
   
