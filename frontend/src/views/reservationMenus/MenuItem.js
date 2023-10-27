@@ -4,6 +4,8 @@ const MenuItem = () => {
 
   const [menuData, setMenuData] = useState([]);
   const [itemCounts, setItemCounts] = useState({});
+  const [reservationDocId, setReservationDocId] = useState('i9gQXk6N2Ua9EiYl0wYk');
+
 
   const handleIncrement = (itemName) => {
     setItemCounts({
@@ -23,6 +25,19 @@ const MenuItem = () => {
 
   const handleClearMenu = () => {
     setItemCounts({});
+    fetch(`https://us-central1-serverless-401214.cloudfunctions.net/deleteReservationMenu?docId=${reservationDocId}`, {
+      method: 'DELETE',
+    })
+      .then((response) => {
+        if (response.ok) {
+          console.log('Reservation cleared successfully!');
+        } else {
+          console.error('Failed to clear the reservation:', response.statusText);
+        }
+      })
+      .catch((error) => {
+        console.error('Error clearing the reservation:', error);
+      });
   };
 
 
@@ -79,11 +94,10 @@ const MenuItem = () => {
       .then((response) => response.json())
       .then((data) => {
         if (Array.isArray(data)) {
-          setMenuData(data);
-          // Update the itemCounts based on the fetched data
+          // Update the itemCounts based on the fetched reservation data
           const newCounts = {};
           data[0].menuItems.forEach((item) => {
-            newCounts[item.itemName] = item.quantity; // Set quantity
+            newCounts[item.itemName] = item.quantity;
           });
           setItemCounts(newCounts);
         } else {
@@ -91,7 +105,7 @@ const MenuItem = () => {
         }
       })
       .catch((error) => {
-        console.error('Error fetching menu data:', error);
+        console.error('Error fetching reservation data:', error);
       });
   
   }, []);
