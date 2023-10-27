@@ -10,46 +10,15 @@ const {onRequest} = require("firebase-functions/v2/https");
 const {initializeApp} = require("firebase-admin/app");
 const {getFirestore} = require("firebase-admin/firestore");
 
-// import firebase from "firebase/app"
-// import { doc, addDoc } from "firebase/firestore";
+//import firebase from "firebase/app" 
+//import { doc, addDoc } from "firebase/firestore";
 
 initializeApp();
 
-exports.viewReservations = onRequest(async (req, res) => {
-  // Get the userID parameter.
-  const userID = req.query.userID;
 
-  // Retrieve reservations from Firestore using the Firebase Admin SDK.
-  // #REFERENCE: Code taken from:
-  // https://firebase.google.com/docs/firestore/query-data/queries#node.js
-  // #REFERENCE: Code Modified From:
-  // https://stackoverflow.com/questions/54328730/how-to-perform-a-firestore-query-inside-a-firebase-function
-  // REFERENCE:
-  // https://firebase.google.com/docs/firestore/query-data/get-data#node.js
-
-  const db = getFirestore();
-
-  const query = db.collection("Reservations")
-      .where("UserID", "==", parseInt(userID));
-
-  const snapshot = await query.get();
-  const jsonReturnVals = {};
-  if (snapshot.empty) {
-    console.log("No documents found.");
-  } else {
-    // REFERENCE:
-    // https://stackoverflow.com/questions/16507222/create-json-object-dynamically-via-javascript-without-concate-strings
-    snapshot.forEach((doc) => {
-      console.log(doc.id, "=>", doc.data());
-      jsonReturnVals[doc.id] = doc.data();
-    });
-  }
-  // Send back the contents of the query.
-  res.setHeader("Content-Type", "application/json");
-  res.send(jsonReturnVals);
-});
 
 exports.bookReservation = onRequest(async (req, res) => {
+
   // Get various request parameters.
   const userID = req.query.userID;
   const restaurantID = req.query.restaurantID;
@@ -87,12 +56,13 @@ exports.bookReservation = onRequest(async (req, res) => {
   const fetch = require("node-fetch");
 
   const responseJSON = await fetch(targetURL)
-      .then((response) => response.json())
-      .catch((e)=> {});
+  .then(response => response.json())
+  .catch((e)=> {});
 
-  const openTime = responseJSON.Open;
-  const closeTime = responseJSON.Close;
-  const restaurantName = responseJSON.RestaurantName;
+  
+  let openTime = responseJSON.Open;
+  let closeTime = responseJSON.Close;
+  let restaurantName = responseJSON.RestaurantName;
 
   console.log(openTime);
   console.log(closeTime);
@@ -106,9 +76,10 @@ exports.bookReservation = onRequest(async (req, res) => {
   // If the three above conditions are satisfied, submit the booking.
   // Otherwise, return an error.
 
-  if ((parseInt(bookingEnd) <= parseInt(closeTime))&&
-    (parseInt(bookingStart) >= parseInt(openTime))&&
-    (parseInt(bookingStart) < parseInt(bookingEnd))) {
+  if((parseInt(bookingEnd) <= parseInt(closeTime)) 
+    && (parseInt(bookingStart) >= parseInt(openTime))
+    && (parseInt(bookingStart) < parseInt(bookingEnd))){
+
     console.log("Booking succeeded!");
 
     // TODO: Write to the reservations database.
@@ -116,64 +87,25 @@ exports.bookReservation = onRequest(async (req, res) => {
     // https://firebase.google.com/docs/firestore/manage-data/add-data#node.js_1
     const dataToWrite = {
 
-      BookingStart: bookingStart,
-      BookingEnd: bookingEnd,
-      RestaurantID: parseInt(restaurantID),
-      RestaurantName: restaurantName,
-      UserID: parseInt(userID),
-      BookingDate: bookingDate,
+        BookingStart: bookingStart,
+        BookingEnd: bookingEnd,
+        RestaurantID: parseInt(restaurantID),
+        RestaurantName: restaurantName,
+        UserID: parseInt(userID),
+        BookingDate: bookingDate
 
     };
 
     const response = await db.collection("Reservations").add(dataToWrite);
-    console.log(response);
-  } else {
+
+
+  } else{
     console.log("Booking failed");
   }
 
   // Send back the contents of the query.
 
   res.setHeader("Content-Type", "application/json");
-  res.send(jsonReturnVals);
-});
-
-exports.deleteReservation = onRequest(async (req, res) => {
-  // Get reservation ID
-  const documentID = req.query.documentID;
-
-  const jsonReturnVals = {};
-
-  console.log("documentID:", documentID);
-
-  const db = getFirestore();
-
-  const response = await db.collection("Reservations").doc(documentID).delete();
-
-  console.log(response);
-
-  res.setHeader("Content-Type", "application/json");
-  res.send(jsonReturnVals);
-});
-
-exports.updateReservation = onRequest(async (req, res) => {
-  // Get reservation ID
-  const documentID = req.query.documentID;
-  const bookingStart = req.query.bookingStart;
-  const bookingEnd = req.query.bookingEnd;
-
-  const jsonReturnVals = {};
-
-  const db = getFirestore();
-
-  const response = await db.collection("Reservations").doc(documentID).update({
-
-    BookingEnd: bookingEnd,
-    BookingStart: bookingStart,
-
-  });
-
-  console.log(response);
-
-  res.setHeader("Content-Type", "application/json");
+  
   res.send(jsonReturnVals);
 });
