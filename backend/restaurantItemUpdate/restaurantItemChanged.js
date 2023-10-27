@@ -29,7 +29,6 @@ exports.handler = async (event) => {
 
             try {
                 const publishTextPromise = await sns.publish(publishParams).promise();
-                console.log(`Message sent to ${SNS_TOPIC_ARN}`);
                 console.log("MessageID " + publishTextPromise.MessageId);
             } catch (err) {
                 console.error(err, err.stack);
