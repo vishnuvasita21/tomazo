@@ -10,10 +10,12 @@ const {onRequest} = require("firebase-functions/v2/https");
 const {initializeApp} = require("firebase-admin/app");
 const {getFirestore} = require("firebase-admin/firestore");
 
+//import firebase from "firebase/app" 
+//import { doc, addDoc } from "firebase/firestore";
+
 initializeApp();
 
-// Take the text parameter passed to this HTTP endpoint and use it to
-// query the Firestore database.
+
 exports.viewReservations = onRequest(async (req, res) => {
 
   // Get the userID parameter.
@@ -50,8 +52,6 @@ exports.viewReservations = onRequest(async (req, res) => {
   res.send(jsonReturnVals);
 });
 
-// Take the text parameter passed to this HTTP endpoint and use it to
-// query the Firestore database.
 exports.bookReservation = onRequest(async (req, res) => {
 
   // Get various request parameters.
@@ -92,29 +92,49 @@ exports.bookReservation = onRequest(async (req, res) => {
   .then(response => response.json())
   .catch((e)=> {});
 
-  // Ensure that the booking end is after the booking start.
+  
   let openTime = responseJSON.Open;
   let closeTime = responseJSON.Close;
+  let restaurantName = responseJSON.RestaurantName;
+
   console.log(openTime);
   console.log(closeTime);
+  console.log(restaurantName);
 
   console.log(responseJSON);
 
+  // Ensure that the booking end is after the booking start.
+  // Ensure that the booking start is after the restaurant opens.
   // Ensure that the booking end is before the resturant closes.
+  // If the three above conditions are satisfied, submit the booking.
+  // Otherwise, return an error.
+
   if((parseInt(bookingEnd) <= parseInt(closeTime)) 
-    && (parseInt(bookingStart) >= parseInt(openTime))){
+    && (parseInt(bookingStart) >= parseInt(openTime))
+    && (parseInt(bookingStart) < parseInt(bookingEnd))){
 
     console.log("Booking succeeded!");
+
+    // TODO: Write to the reservations database.
+    // #REFERENCE:
+    // https://firebase.google.com/docs/firestore/manage-data/add-data#node.js_1
+    const dataToWrite = {
+
+        BookingStart: bookingStart,
+        BookingEnd: bookingEnd,
+        RestaurantID: restaurantID,
+        RestaurantName: restaurantName,
+        UserID: userID
+
+    };
+
+    const response = await db.collection("Reservations").add(dataToWrite);
+
+
   } else{
     console.log("Booking failed");
   }
 
-  // Ensure that the booking start is after the restaurant opens.
-
-
-  // If the three above conditions are satisfied, submit the booking.
-  // Otherwise, return an error.
-  
   // Send back the contents of the query.
 
   res.setHeader("Content-Type", "application/json");
