@@ -1,0 +1,62 @@
+.menu-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .menu-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .menu-table th,
+  .menu-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  .menu-table th {
+    background-color: #f2f2f2;
+  }
+  
+  .menu-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+  .menu-table tr:hover {
+    background-color: #ddd;
+  }
+  
+  .menu-table td button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    margin-right: 5px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .menu-table td button:hover {
+    background-color: #45a049;
+  }
+  
+  .action-buttons {
+    margin-top: 20px;
+  }
+  
+  .action-buttons button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .action-buttons button:hover {
+    background-color: #45a049;
+  }
+  
