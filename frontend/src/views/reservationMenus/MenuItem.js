@@ -1,21 +1,12 @@
 import React, { useState, useEffect } from 'react';
-<<<<<<< HEAD
-import { useLocation } from 'react-router-dom';
-
-const MenuItem = () => {
-  const location = useLocation();
-  const receivedState = location.state;
-  const [menuData, setMenuData] = useState([]);
-  const [itemCounts, setItemCounts] = useState({});
-  const [reservationDocId, setReservationDocId] = useState(receivedState?.RestaurantID);
-=======
+import './Menuitem.css'
+import axios from 'axios';
 
 const MenuItem = () => {
 
   const [menuData, setMenuData] = useState([]);
   const [itemCounts, setItemCounts] = useState({});
-  const [reservationDocId, setReservationDocId] = useState('i9gQXk6N2Ua9EiYl0wYk');
->>>>>>> main
+  const [reservationDocId, setReservationDocId] = useState('w5EDN2NeZol62CPV0tlJ');
 
 
   const handleIncrement = (itemName) => {
@@ -64,13 +55,12 @@ const MenuItem = () => {
       })),
     };
 
-    // Send a POST request to add the reservation to Firestore
-    fetch('https://us-central1-serverless-401214.cloudfunctions.net/addReservationMenu', {
-      method: 'POST',
+    
+    axios
+    .post('https://us-central1-serverless-401214.cloudfunctions.net/addReservationMenu', reservationData, {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(reservationData),
     })
       .then((response) => {
         if (response.ok) {
@@ -87,7 +77,6 @@ const MenuItem = () => {
   };
 
   useEffect(() => {
-    // Fetch menu data from the provided URL
     fetch('https://us-central1-serverless-401214.cloudfunctions.net/getRestaurantMenu?restaurantId=1')
       .then((response) => response.json())
       .then((data) => {
@@ -105,7 +94,6 @@ const MenuItem = () => {
       .then((response) => response.json())
       .then((data) => {
         if (Array.isArray(data)) {
-          // Update the itemCounts based on the fetched reservation data
           const newCounts = {};
           data[0].menuItems.forEach((item) => {
             newCounts[item.itemName] = item.quantity;
@@ -122,9 +110,9 @@ const MenuItem = () => {
   }, []);
 
   return (
-    <div className="App">
+    <div className="menu-container">
       <h1>Menu</h1>
-      <table>
+      <table className="menu-table">
         <thead>
           <tr>
             <th>Item Name</th>
@@ -150,8 +138,10 @@ const MenuItem = () => {
           ))}
         </tbody>
       </table>
-      <button onClick={handleBookMenu}>Book Menu</button>
-      <button onClick={handleClearMenu}>Clear Menu</button>
+      <div className="action-buttons">
+        <button onClick={handleBookMenu}>Book Menu</button>
+        <button onClick={handleClearMenu}>Clear Menu</button>
+      </div>
     </div>
   );
 }
