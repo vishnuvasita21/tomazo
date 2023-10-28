@@ -5,7 +5,10 @@ import { Button } from "antd";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase";
 import image from "../../assets/tomazo-1.png";
+<<<<<<< HEAD
 import axios from "axios";
+=======
+>>>>>>> main
 
 const redStripStyle = {
   backgroundColor: "#ca3433",
@@ -28,6 +31,7 @@ const logoutButtonStyle = {
   borderRadius: "5px",
 };
 
+<<<<<<< HEAD
 
 
 function RestaurantList() {
@@ -55,6 +59,10 @@ function RestaurantList() {
   const navigateToMenu = (RestaurantID) => {
     navigate('/menu', { state: { RestaurantID: RestaurantID } }); 
   };
+=======
+function RestaurantList() {
+  const navigate = useNavigate();
+>>>>>>> main
 
   const [user, setUser] = useState(null);
 
@@ -83,6 +91,7 @@ function RestaurantList() {
     }
   };
 
+<<<<<<< HEAD
   const cardStyle = {
     border: '1px solid #eee',
     boxShadow: '0 2px 3px #ccc',
@@ -126,6 +135,8 @@ function RestaurantList() {
   if (loading) return <p>Loading..</p>;
   if (error) return <p>Error!</p>;
   
+=======
+>>>>>>> main
   return (
     <div>
       <div style={redStripStyle}>
@@ -141,6 +152,7 @@ function RestaurantList() {
 
       <div>
         <h1>Restaurant List</h1>
+<<<<<<< HEAD
         <div style={cardStyle}>
         {data.map(item => (
           <div style={cardView} key={item.id}>
@@ -157,6 +169,13 @@ function RestaurantList() {
           </div>
         ))}
       </div>
+=======
+        {user && (
+          <p>
+            Welcome, {user.displayName} ({user.email})
+          </p>
+        )}
+>>>>>>> main
       </div>
     </div>
   );

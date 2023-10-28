@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+<<<<<<< HEAD
 import { useLocation } from 'react-router-dom';
 
 const MenuItem = () => {
@@ -7,6 +8,14 @@ const MenuItem = () => {
   const [menuData, setMenuData] = useState([]);
   const [itemCounts, setItemCounts] = useState({});
   const [reservationDocId, setReservationDocId] = useState(receivedState?.RestaurantID);
+=======
+
+const MenuItem = () => {
+
+  const [menuData, setMenuData] = useState([]);
+  const [itemCounts, setItemCounts] = useState({});
+  const [reservationDocId, setReservationDocId] = useState('i9gQXk6N2Ua9EiYl0wYk');
+>>>>>>> main
 
 
   const handleIncrement = (itemName) => {
