@@ -39,5 +39,19 @@ exports.getRestaurantMenu = onRequest((request, response) => {
 });
 });
 
+exports.deleteResertaurantMenu = onRequest((request, response) => {
+  cors(request, response, async () => {
+  try {
+    const docId = request.query.docId; 
+    const docRef = firestore.collection('restaurantMenu').doc(docId).delete();
+
+    return response.status(200).json({ message: 'Restaurant menu deleted' });
+  } catch (error) {
+    console.error('Error deleting restaurant menu :', error);
+    return response.status(500).json({ error: 'Failed to delete restaurant menu.' });
+  }
+});
+});
+
 
 
