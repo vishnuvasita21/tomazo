@@ -8,6 +8,7 @@ import RegistrationPage from "./views/Registration/index";
 import RestaurantList from "./views/RestaurantList/index";
 import image from "./assets/tomazo-1.png";
 import MenuItem from "./views/reservationMenus/MenuItem";
+import UpdateRestaurantInfo from "./views/UpdateRestaurantInfo/index";
 
 function LandingPage() {
   return (
@@ -59,6 +60,7 @@ function App() {
           <Route path="/signup" element={<RegistrationPage />} />
           <Route path="/home" element={<RestaurantList />} />
           <Route path="/menu" element={<MenuItem />} />
+          <Route path="/updateRestaurantInfo" element={<UpdateRestaurantInfo />} />
         </Routes>
       </Router>
     </div>
