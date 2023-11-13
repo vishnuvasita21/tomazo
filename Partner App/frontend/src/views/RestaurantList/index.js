@@ -56,10 +56,6 @@ function RestaurantList() {
     navigate('/menu', { state: { RestaurantID: RestaurantID } }); 
   };
 
-  const navigateToTestUpdateTimes = (RestaurantID) => {
-    navigate('/updateRestaurantInfo', { state: { RestaurantID: RestaurantID } }); 
-  };
-
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -155,10 +151,6 @@ function RestaurantList() {
             
               <button onClick={() => navigateToMenu(item.RestaurantID)}>
                 Menu
-              </button>
-
-              <button onClick={() => navigateToTestUpdateTimes(item.RestaurantID)}>
-                UpdateRestaurantInfo
               </button>
 
             </div>
