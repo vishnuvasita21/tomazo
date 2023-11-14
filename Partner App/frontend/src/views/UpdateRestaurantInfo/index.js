@@ -6,6 +6,7 @@ import { signOut } from "firebase/auth";
 import { auth } from "../../firebase";
 import image from "../../assets/tomazo-1.png";
 import axios from "axios";
+import Form from "./Form";
 
 const redStripStyle = {
   backgroundColor: "#ca3433",
@@ -29,6 +30,8 @@ const logoutButtonStyle = {
 };
 
 
+// #REFERENCE: Code and logic modified from:
+// https://herotofu.com/solutions/guides/react-post-form-data-to-api
 
 function UpdateRestaurantInfo() {
   const navigate = useNavigate();
@@ -131,12 +134,7 @@ function UpdateRestaurantInfo() {
   if (error) return <p>Error!</p>;
 
 // #REFERENCE: https://herotofu.com/solutions/guides/react-post-form-data-to-api
-const FORM_ENDPOINT = "https://0520gbfb3k.execute-api.us-east-2.amazonaws.com/setClose";
 
-function handleSubmit () {
-
-  console.log("Implement handleSubmit()");
-}
   return (
     <div>
       <div style={redStripStyle}>
@@ -153,31 +151,8 @@ function handleSubmit () {
       <div>
         <h1>Update Restaurant Information</h1>
 
-        <form
-          action={FORM_ENDPOINT}
-          onsubmit={handleSubmit}
-          METHOD="PUT"
-        >
-        <input
-        type="text"
-        placeholder="New closing time"
-        name="CloseHour"
-        required
-        />
-
-        <input
-        type="number"
-        placeholder="Restaurant ID"
-        name="RestaurantID"
-        required
-        />
-
-        <input
-        type="submit"
-        value="Submit"
-        />
-
-        </form>
+        <Form />
+        
       </div>
     </div>
   );
