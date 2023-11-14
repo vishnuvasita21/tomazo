@@ -53,5 +53,36 @@ exports.deleteResertaurantMenu = onRequest((request, response) => {
 });
 });
 
+exports.addRestaurantMenu = onRequest((request, response) => {
+  cors(request, response, async () => {
+  try {
+    const requestData = request.body; 
+    const docRef = await firestore.collection('restaurantMenu').add(requestData);
+
+    return response.status(201).json({ message: 'menu added', id: docRef.id });
+  } catch (error) {
+    console.error('Error adding menu:', error);
+    return response.status(500).json({ error: 'Failed to add menu.' });
+  }
+});
+});
+
+exports.updateRestaurantMenu = onRequest((request, response) => {
+  cors(request, response, async () => {
+  try {
+    const docId = request.query.docId;
+    const updatedData = request.body; 
+
+    const docRef = firestore.collection('restaurantMenu').doc(docId).update(updatedData);
+
+    return response.status(200).json({ message: 'Restaurant menu updated' });
+  } catch (error) {
+    console.error('Error updating restaurant menu:', error);
+    return response.status(500).json({ error: 'Failed to update restaurant menu.' });
+  }
+});
+});
+
+
 
 
