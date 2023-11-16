@@ -23,7 +23,7 @@ export const handler = async (event, context) => {
   try {
     switch (event.routeKey) {
       
-      case "GET /getTableStatus":
+      case "POST /getTableStatus":
         
         let requestJSON = JSON.parse(event.body);
         body = await dynamo.send(
