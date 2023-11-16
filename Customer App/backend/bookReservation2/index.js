@@ -10,24 +10,23 @@ const {onRequest} = require("firebase-functions/v2/https");
 const {initializeApp} = require("firebase-admin/app");
 const {getFirestore} = require("firebase-admin/firestore");
 
-//import firebase from "firebase/app" 
-//import { doc, addDoc } from "firebase/firestore";
+// import firebase from "firebase/app"
+// import { doc, addDoc } from "firebase/firestore";
 
 initializeApp();
 
-
-
 exports.bookReservation = onRequest(async (req, res) => {
-
   // Get various request parameters.
   const userID = req.query.userID;
   const restaurantID = req.query.restaurantID;
+  const tableID = req.query.tableID;
   const bookingStart = req.query.bookingStart;
   const bookingEnd = req.query.bookingEnd;
   const bookingDate = req.query.bookingDate;
 
   console.log("userID:", userID);
   console.log("restaurantID:", restaurantID);
+  console.log("tableID:", tableID);
   console.log("bookingStart:", bookingStart);
   console.log("bookingEnd", bookingEnd);
   console.log("bookingDate", bookingDate);
@@ -48,41 +47,96 @@ exports.bookReservation = onRequest(async (req, res) => {
   // #REFERENCE: https://stackoverflow.com/questions/32604460/xmlhttprequest-module-not-defined-found
   // #REFERENCE: https://stackoverflow.com/questions/3038901/how-to-get-the-response-of-xmlhttprequest
 
-  let targetURL = "https://0520gbfb3k.execute-api.us-east-2.amazonaws.com/getRestaurantByID/";
-  targetURL = targetURL.concat(restaurantID);
+  let targetURLRestaurant = "https://0520gbfb3k.execute-api.us-east-2.amazonaws.com/getRestaurantByID/";
+  targetURLRestaurant = targetURLRestaurant.concat(restaurantID);
 
-  console.log(targetURL);
+  console.log("TargetURLRestaurant", targetURLRestaurant);
 
   const fetch = require("node-fetch");
 
-  const responseJSON = await fetch(targetURL)
-  .then(response => response.json())
-  .catch((e)=> {});
+  const responseJSONRestaurant = await fetch(targetURLRestaurant)
+    .then(response => response.json())
+    .catch((e)=> {});
 
+  const openTime = responseJSONRestaurant.OpenHour;
+  const closeTime = responseJSONRestaurant.CloseHour;
+  const restaurantName = responseJSONRestaurant.RestaurantName;
+
+  console.log("Open time:", openTime);
+  console.log("Close time:", closeTime);
+  console.log("Restaurant name:", restaurantName);
+
+  console.log("Response JSON Restaurant:", responseJSONRestaurant);
+
+  let targetURLTable = "https://0520gbfb3k.execute-api.us-east-2.amazonaws.com/getTableStatus";
+
+  console.log("Target Table URL:", targetURLTable);
+
+const requestData = JSON.stringify({
+  RestaurantID: parseInt(restaurantID), 
+  TableID: parseInt(tableID)});
+console.log("Request data: ", requestData);
+
+const responseJSONTable = await fetch(targetURLTable, {
+  method: 'POST',
+  headers: {
+    'Accept': '*/*',
+    'Content-Type': 'application/json'
+  },
+  body: requestData
+ })
+ .then(response => response.json())
+ .catch((e)=> {});
+
+  console.log("Response JSON Table:", responseJSONTable);
+  let tableStatus = responseJSONTable.TableStatus;
   
-  let openTime = responseJSON.Open;
-  let closeTime = responseJSON.Close;
-  let restaurantName = responseJSON.RestaurantName;
-
-  console.log(openTime);
-  console.log(closeTime);
-  console.log(restaurantName);
-
-  console.log(responseJSON);
+  console.log("Table Status:", tableStatus);
 
   // Ensure that the booking end is after the booking start.
   // Ensure that the booking start is after the restaurant opens.
   // Ensure that the booking end is before the resturant closes.
-  // If the three above conditions are satisfied, submit the booking.
+  // Ensure that the table is not reserved.
+  // TODO: Ensure that there are no existing bookings for this table on
+  // this date at this time.
+  // If the above conditions are satisfied, submit the booking.
   // Otherwise, return an error.
+
+  const query = db.collection("Reservations")
+    .where("BookingStart", "==", bookingStart)
+    .where("BookingDate", "==", bookingDate)
+    .where("TableID", "==", parseInt(tableID))
+    .where("RestaurantID", "==", parseInt(restaurantID))
+    .where("BookingStatus", "==", "Approved");
+
+  let bookingExists = true;
+
+  const snapshot = await query.get();
+  let jsonReturnValsBooking = {};
+  if (snapshot.empty) {
+    let message = "Booking success! No existing approved booking found for the specified date, time, table.";
+    console.log(message);
+    jsonReturnValsBooking = JSON.stringify(message);
+    bookingExists = false;
+  } else {
+    // REFERENCE:
+    // https://stackoverflow.com/questions/16507222/create-json-object-dynamically-via-javascript-without-concate-strings
+    snapshot.forEach((doc) => {
+      console.log(doc.id, "=>", doc.data());
+      jsonReturnValsBooking[doc.id] = doc.data();
+    });
+  }
+
+  console.log(jsonReturnValsBooking);
 
   if((parseInt(bookingEnd) <= parseInt(closeTime)) 
     && (parseInt(bookingStart) >= parseInt(openTime))
-    && (parseInt(bookingStart) < parseInt(bookingEnd))){
+    && (parseInt(bookingStart) < parseInt(bookingEnd))
+    && (!bookingExists)
+    && (tableStatus === "Open")){
 
     console.log("Booking succeeded!");
 
-    // TODO: Write to the reservations database.
     // #REFERENCE:
     // https://firebase.google.com/docs/firestore/manage-data/add-data#node.js_1
     const dataToWrite = {
@@ -92,13 +146,14 @@ exports.bookReservation = onRequest(async (req, res) => {
         RestaurantID: parseInt(restaurantID),
         RestaurantName: restaurantName,
         UserID: parseInt(userID),
-        BookingDate: bookingDate
+        TableID: parseInt(tableID),
+        BookingDate: bookingDate,
+        BookingStatus: "Pending"
 
     };
 
     const response = await db.collection("Reservations").add(dataToWrite);
-
-
+    
   } else{
     console.log("Booking failed");
   }
@@ -107,5 +162,5 @@ exports.bookReservation = onRequest(async (req, res) => {
 
   res.setHeader("Content-Type", "application/json");
   
-  res.send(jsonReturnVals);
+  res.send(jsonReturnValsBooking);
 });
