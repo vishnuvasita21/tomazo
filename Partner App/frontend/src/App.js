@@ -9,7 +9,9 @@ import RestaurantList from "./views/RestaurantList/index";
 import image from "./assets/tomazo-1.png";
 import MenuItem from "./views/reservationMenus/MenuItem";
 import UpdateRestaurantInfo from "./views/UpdateRestaurantInfo/index";
+import UpdateRestaurantOpen from "./views/UpdateRestaurantOpen/index";
 import AddTable from "./views/AddTable/index";
+import ViewReservationsRestaurant from "./views/ViewReservationsRestaurant/index";
 
 function LandingPage() {
   return (
@@ -62,7 +64,9 @@ function App() {
           <Route path="/home" element={<RestaurantList />} />
           <Route path="/menu" element={<MenuItem />} />
           <Route path="/updateRestaurantInfo" element={<UpdateRestaurantInfo />} />
+          <Route path="/updateRestaurantOpen" element={<UpdateRestaurantOpen />} />
           <Route path="/addTable" element={<AddTable />} />
+          <Route path="/viewReservationsRestaurant" element={<ViewReservationsRestaurant />} />
         </Routes>
       </Router>
     </div>

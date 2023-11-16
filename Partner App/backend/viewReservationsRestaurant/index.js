@@ -15,39 +15,45 @@ const {getFirestore} = require("firebase-admin/firestore");
 
 initializeApp();
 
+// #REFERENCE: 
+// https://stackoverflow.com/questions/42755131/enabling-cors-in-cloud-functions-for-firebase
+
+
 
 exports.viewReservationsRestaurant= onRequest(async (req, res) => {
 
-  // Get the userID parameter.
-  const restaurantID = req.query.restaurantID;
+    // Get the userID parameter.
+    const restaurantID = req.query.restaurantID;
 
-  // Retrieve reservations from Firestore using the Firebase Admin SDK.
-  // #REFERENCE: Code taken from:
-  // https://firebase.google.com/docs/firestore/query-data/queries#node.js
-  // #REFERENCE: Code Modified From:
-  // https://stackoverflow.com/questions/54328730/how-to-perform-a-firestore-query-inside-a-firebase-function
-  // REFERENCE: 
-  // https://firebase.google.com/docs/firestore/query-data/get-data#node.js
+    // Retrieve reservations from Firestore using the Firebase Admin SDK.
+    // #REFERENCE: Code taken from:
+    // https://firebase.google.com/docs/firestore/query-data/queries#node.js
+    // #REFERENCE: Code Modified From:
+    // https://stackoverflow.com/questions/54328730/how-to-perform-a-firestore-query-inside-a-firebase-function
+    // REFERENCE: 
+    // https://firebase.google.com/docs/firestore/query-data/get-data#node.js
 
-  const db = getFirestore();
+    const db = getFirestore();
 
-  const query = db.collection("Reservations")
-      .where("RestaurantID", "==", parseInt(restaurantID));
+    const query = db.collection("Reservations")
+        .where("RestaurantID", "==", parseInt(restaurantID));
 
-  const snapshot = await query.get();
+    const snapshot = await query.get();
 
-  const jsonReturnVals = {};
-  if (snapshot.empty) {
-    console.log("No documents found.");
-  } else {
-    // REFERENCE:
-    // https://stackoverflow.com/questions/16507222/create-json-object-dynamically-via-javascript-without-concate-strings
-    snapshot.forEach((doc) => {
-      console.log(doc.id, "=>", doc.data());
-      jsonReturnVals[doc.id] = doc.data();
-    });
-  }
-  // Send back the contents of the query.
-  res.setHeader("Content-Type", "application/json");
-  res.send(jsonReturnVals);
+    const jsonReturnVals = {};
+    if (snapshot.empty) {
+      console.log("No documents found.");
+    } else {
+      // REFERENCE:
+      // https://stackoverflow.com/questions/16507222/create-json-object-dynamically-via-javascript-without-concate-strings
+      snapshot.forEach((doc) => {
+        console.log(doc.id, "=>", doc.data());
+        jsonReturnVals[doc.id] = doc.data();
+      });
+    }
+    // Send back the contents of the query.
+    res.set('Access-Control-Allow-Origin', '*');
+    res.setHeader("Content-Type", "application/json");
+    res.send(jsonReturnVals);
+
 });
