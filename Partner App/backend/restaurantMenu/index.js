@@ -83,6 +83,43 @@ exports.updateRestaurantMenu = onRequest((request, response) => {
 });
 });
 
+exports.addRestaurantMenuDiscount = onRequest((request, response) => {
+  cors(request, response, async () => {
+  try {
+    const requestData = request.body; 
+    const docRef = await firestore.collection('restaurantMenuDiscounts').add(requestData);
+
+    return response.status(201).json({ message: 'discounts for the menu added', id: docRef.id });
+  } catch (error) {
+    console.error('Error adding discounts for the menu:', error);
+    return response.status(500).json({ error: 'Failed to add discounts for the menu.' });
+  }
+});
+});
+
+exports.getRestaurantMenuDiscounts = onRequest((request, response) => {
+  cors(request, response, async () => {
+  try {
+    const restaurantId = request.query.restaurantId;
+
+    const menuDiscountQuery = await firestore
+      .collection('restaurantMenuDiscounts')
+      .where('restaurantId', '==', parseInt(restaurantId))
+      .get();
+    const menuDiscounts = [];
+    menuDiscountQuery.forEach((doc) => {
+      menuDiscounts.push({ id: doc.id, ...doc.data() });
+      console.log(doc.id)
+    });
+
+    return response.status(200).json(menuDiscounts);
+  } catch (error) {
+    console.error('Error fetching restaurant discounts on menu:', error);
+    return response.status(500).json({ error: 'Failed to fetch restaurant discounts on menu.' });
+  }
+});
+});
+
 
 
 
