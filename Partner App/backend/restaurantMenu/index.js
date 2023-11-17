@@ -121,5 +121,38 @@ exports.getRestaurantMenuDiscounts = onRequest((request, response) => {
 });
 
 
+exports.updateRestaurantMenuDiscount = onRequest((request, response) => {
+  cors(request, response, async () => {
+  try {
+    const docId = request.query.docId;
+    const updatedData = request.body; 
+
+    const docRef = firestore.collection('restaurantMenuDiscounts').doc(docId).update(updatedData);
+
+    return response.status(200).json({ message: 'discounts for the restaurant menu updated' });
+  } catch (error) {
+    console.error('Error updating discounts for the restaurant menu:', error);
+    return response.status(500).json({ error: 'Failed to update restaurant menu discounts.' });
+  }
+});
+});
+
+
+exports.deleteResertaurantMenuDiscount = onRequest((request, response) => {
+  cors(request, response, async () => {
+  try {
+    const docId = request.query.docId; 
+    const docRef = firestore.collection('restaurantMenuDiscounts').doc(docId).delete();
+
+    return response.status(200).json({ message: 'discounts for the menu deleted' });
+  } catch (error) {
+    console.error('Error deleting restaurant menu discounts:', error);
+    return response.status(500).json({ error: 'Failed to delete restaurant menu discounts.' });
+  }
+});
+});
+
+
+
 
 
