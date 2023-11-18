@@ -49,7 +49,7 @@ const MenuPage = () => {
     <div>
       
       <Link  to={{
-                      pathname: '/edit-Items',
+                      pathname: '/edit-menu',
                       search: `?name=${encodeURIComponent(name)}`,
                     }}>
         <button>Edit Menu</button>

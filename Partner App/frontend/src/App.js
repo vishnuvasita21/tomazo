@@ -5,6 +5,7 @@ import "./App.css";
 import { Link } from "react-router-dom";
 import MenuTypes from "./views/Menu/MenuTypes";
 import MenuPage from "./views/Menu/MenuPage";
+import EditMenu from "./views/Menu/EditMenu";
 
 function LandingPage() {
   return (
@@ -35,6 +36,8 @@ function App() {
           
           <Route path="/menu" element={<MenuTypes />} />
           <Route path="/menuItems" element={<MenuPage />} />
+          <Route path="/edit-menu" element={<EditMenu />} />
+          
         </Routes>
       </Router>
     </div>
