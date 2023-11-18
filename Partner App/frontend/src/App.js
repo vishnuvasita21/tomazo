@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import axios from "axios";
 import "./App.css";
 import { Link } from "react-router-dom";
+import MenuTypes from "./views/Menu/MenuTypes";
+import MenuPage from "./views/Menu/MenuPage";
+import EditMenu from "./views/Menu/EditMenu";
 import LoginPage from "../src/views/Login/index";
 import RegistrationPage from "../src/views/Registration/index";
 import image from "../src/assets/dine-1.png";
@@ -47,6 +50,7 @@ function App() {
     <div className="App">
       <Router>
         <Routes>
+          
           <Route
             path="/"
             element={
@@ -59,6 +63,9 @@ function App() {
           />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<RegistrationPage />} />
+          <Route path="/menu" element={<MenuTypes />} />
+          <Route path="/menuItems" element={<MenuPage />} />
+          <Route path="/edit-menu" element={<EditMenu />} />
           {/* <Route path="/home" element={<RestaurantList />} />
           <Route path="/menu" element={<MenuItem />} /> */}
         </Routes>
