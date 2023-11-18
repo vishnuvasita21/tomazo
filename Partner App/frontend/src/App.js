@@ -11,6 +11,7 @@ import MenuItem from "./views/reservationMenus/MenuItem";
 import UpdateRestaurantInfo from "./views/UpdateRestaurantInfo/index";
 import UpdateRestaurantOpen from "./views/UpdateRestaurantOpen/index";
 import UpdateRestaurantStatus from "./views/UpdateRestaurantStatus/index";
+import UpdateReservationStatus from "./views/UpdateReservationStatus/index";
 import AddTable from "./views/AddTable/index";
 import ViewReservationsRestaurant from "./views/ViewReservationsRestaurant/index";
 
@@ -67,6 +68,7 @@ function App() {
           <Route path="/updateRestaurantInfo" element={<UpdateRestaurantInfo />} />
           <Route path="/updateRestaurantOpen" element={<UpdateRestaurantOpen />} />
           <Route path="/updateRestaurantStatus" element={<UpdateRestaurantStatus />} />
+          <Route path="/updateReservationStatus" element={<UpdateReservationStatus />} />
           <Route path="/addTable" element={<AddTable />} />
           <Route path="/viewReservationsRestaurant" element={<ViewReservationsRestaurant />} />
         </Routes>
