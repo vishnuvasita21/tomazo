@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+
+import './EditMenu.css';
 
 const EditMenu = () => {
   const [menuData, setMenuData] = useState([]);
   const [docId, setDocId] = useState('');
   const [discountValue, setDiscountValue] = useState('');
   const [selectedRows, setSelectedRows] = useState([]);
-  const restaurantId = 2;
+  const restaurantId = parseInt(localStorage.getItem('restaurantId'));
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const name = searchParams.get('name');
   const [menuExist, setMenuExist]=useState('no');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -68,9 +71,10 @@ const handleRemoveItems = () => {
     if (field === 'discount' && (value < 0 || value > 100 || isNaN(value))) {
       return;
     }
-    if (field === 'available' && value !== 'true' && value !== 'false') {
-      return;
-    }
+    if (field === 'available' && (value === 'true' || value === 'false')) {
+        updatedMenuData[restaurantIndex].menuItems[itemIndex][field] = value;
+        setMenuData(updatedMenuData);
+      }
     updatedMenuData[restaurantIndex].menuItems[itemIndex][field] = value;
     setMenuData(updatedMenuData);
   };
@@ -104,7 +108,10 @@ const handleRemoveItems = () => {
               },
             }
           );
+          setMenuExist('yes')
           alert('Menu updated successfully!');
+          navigate(`/edit-menu?name=${encodeURIComponent(name)}`); 
+          window.location.reload();
     }
     } catch (error) {
       console.error('Error updating menu:', error);
@@ -152,8 +159,9 @@ const handleRemoveItems = () => {
   };
 
   return (
-    <div>
-      <h1>Edit Menu</h1>
+    <div >
+    <h1>Edit Menu</h1>
+    <div className="edit-menu-options">
       <button onClick={handleAddMenuItem}>Add Menu Item</button>
       <input
         type="number"
@@ -163,9 +171,12 @@ const handleRemoveItems = () => {
       />
       <button onClick={handleApplyDiscount}>Apply Discount</button>
       <button onClick={handleRemoveItems}>Remove Item</button>
-      <table>
+    </div>
+    <table className="menu-table">
+
         <thead>
           <tr>
+            <th></th>
             <th>Item Name</th>
             <th>Price</th>
             <th>Description</th>
@@ -227,7 +238,8 @@ const handleRemoveItems = () => {
           )}
         </tbody>
       </table>
-      <button onClick={handleSave}>Save</button>
+      <br></br>
+      <button className="save-button" onClick={handleSave}>Save</button>
     </div>
   );
 };

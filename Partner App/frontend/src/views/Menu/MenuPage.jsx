@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link, useLocation } from 'react-router-dom';
 
+
 const MenuPage = () => {
   const [filteredMenu, setFilteredMenu] = useState([]);
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const restaurantId = 2;
+  const restaurantId = localStorage.getItem('restaurantId');
   const name = searchParams.get('name');
 
   useEffect(() => {
@@ -53,7 +54,8 @@ const MenuPage = () => {
         pathname: '/edit-menu',
         search: `?name=${encodeURIComponent(name)}`,
       }}>
-        <button>Edit Menu</button>
+        <button style={{ backgroundColor: '#ca3433', color: 'white' }}>Edit Menu</button>
+
       </Link>
       {filteredMenu.length === 0 ? (
         <p>No menu items have been added.</p>
