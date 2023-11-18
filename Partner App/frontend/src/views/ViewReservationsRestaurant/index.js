@@ -32,7 +32,7 @@ const logoutButtonStyle = {
 
 function ViewReservationsRestaurant() {
   const navigate = useNavigate();
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   //api
@@ -41,12 +41,12 @@ function ViewReservationsRestaurant() {
       try {
         const response = await axios.get('https://us-central1-csci5410-14dd5.cloudfunctions.net/viewReservationsRestaurant?restaurantID=1');
         // console.log(JSON.stringify(response.data));
-        setData(response.data);
+        setData(Object.values(response.data));
       } catch (err) {
         setError(err);
-      } finally {
-        setLoading(false);
-      }
+      } //finally {
+        //setLoading(false);
+      //}
     };
 
     fetchData();
@@ -124,7 +124,7 @@ function ViewReservationsRestaurant() {
     display: 'flex',
     flexDirection: 'row',
   }
-  if (loading) return <p>Loading..</p>;
+  //if (loading) return <p>Loading..</p>;
   if (error) return <p>Error!</p>;
   
   return (
