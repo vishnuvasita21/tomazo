@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+
 import {
   createUserWithEmailAndPassword,
   signInWithPopup,
@@ -25,6 +26,7 @@ const PartnerRegistration = () => {
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
+
   };
 
   const validatePassword = (password) => {
@@ -32,9 +34,11 @@ const PartnerRegistration = () => {
     return passwordRegex.test(password);
   };
 
+
   const validatePhoneNumber = (phoneNumber) => {
     const phoneRegex = /^\d{10}$/;
     return phoneRegex.test(phoneNumber);
+
   };
 
   const handleBlur = (fieldName) => {
@@ -50,45 +54,56 @@ const PartnerRegistration = () => {
       } else {
         setPasswordError("");
       }
+
     } else if (fieldName === "phone") {
       setPhoneError(
         validatePhoneNumber(phone) ? "" : "Phone number must be 10 digits"
       );
     } else if (fieldName === "name") {
       setNameError(name.trim() !== "" ? "" : "Name cannot be empty");
+
     }
   };
 
   const handleSignup = async () => {
     const isEmailValid = validateEmail(email);
     const isPasswordValid = validatePassword(password);
+
     const isPhoneNumberValid = validatePhoneNumber(phone);
     const isNameValid = name.trim() !== "";
+
 
     setEmailError(isEmailValid ? "" : "Invalid email address");
     setPasswordError(
       isPasswordValid ? "" : "Password does not meet requirements"
     );
+
     setPhoneError(isPhoneNumberValid ? "" : "Phone number must be 10 digits");
     setNameError(isNameValid ? "" : "Name cannot be empty");
+
 
     if (
       isEmailValid &&
       isPasswordValid &&
+
       isPhoneNumberValid &&
       isNameValid &&
+
       confirmPassword === password
     ) {
       try {
         await createUserWithEmailAndPassword(auth, email, password);
 
+
         window.location.href = "/partner-home";
+
       } catch (error) {
         console.error("Error signing up with email/password:", error);
         alert(error);
       }
     }
   };
+
 
   const handleGoogleSignup = async () => {
     const provider = new GoogleAuthProvider();
@@ -115,8 +130,10 @@ const PartnerRegistration = () => {
       >
         <img
           src={image}
+
           alt="Restaurant Image"
           style={{ width: "80%", maxWidth: "100%", height: "auto" }}
+
         />
       </div>
       <div
@@ -128,7 +145,9 @@ const PartnerRegistration = () => {
           justifyContent: "center",
         }}
       >
+
         <div style={{ textAlign: "center", width: "80%" }}>
+
           <form>
             <h1
               style={{
@@ -137,6 +156,7 @@ const PartnerRegistration = () => {
                 marginBottom: "20px",
               }}
             >
+
               RESTAURANT SIGNUP
             </h1>
             <input
@@ -207,6 +227,7 @@ const PartnerRegistration = () => {
 
             <input
               type="text"
+
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -216,13 +237,17 @@ const PartnerRegistration = () => {
                 border: `2px solid ${emailError ? "red" : "#ca3433"}`,
                 borderRadius: "5px",
                 outline: "none",
+
                 width: "100%",
+
                 marginBottom: "10px",
               }}
             />
             {emailError && <p style={{ color: "red" }}>{emailError}</p>}
             <input
+
               type="password"
+
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -232,13 +257,17 @@ const PartnerRegistration = () => {
                 border: `2px solid ${passwordError ? "red" : "#ca3433"}`,
                 borderRadius: "5px",
                 outline: "none",
+
                 width: "100%",
+
                 marginBottom: "10px",
               }}
             />
             {passwordError && <p style={{ color: "red" }}>{passwordError}</p>}
             <input
+
               type="password"
+
               placeholder="Confirm Password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
@@ -248,11 +277,14 @@ const PartnerRegistration = () => {
                 border: `2px solid ${passwordError ? "red" : "#ca3433"}`,
                 borderRadius: "5px",
                 outline: "none",
+
                 width: "100%",
+
                 marginBottom: "10px",
               }}
             />
             {passwordError && <p style={{ color: "red" }}>{passwordError}</p>}
+
             <button
               type="button"
               onClick={handleSignup}
@@ -264,11 +296,14 @@ const PartnerRegistration = () => {
                 borderRadius: "5px",
                 cursor: "pointer",
                 marginTop: "10px",
+
                 width: "100%",
+
               }}
             >
               Register
             </button>
+
             <button
               type="button"
               onClick={handleGoogleSignup}
@@ -285,6 +320,7 @@ const PartnerRegistration = () => {
             >
               Continue with Google
             </button>
+
             <p
               style={{ color: "#ca3433", fontSize: "14px", marginTop: "10px" }}
             >
@@ -298,3 +334,4 @@ const PartnerRegistration = () => {
 };
 
 export default PartnerRegistration;
+

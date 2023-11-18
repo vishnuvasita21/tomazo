@@ -1,3 +1,4 @@
+
 import image from "../../assets/dine-1.png";
 import React, { useState } from "react";
 import { auth, googleProvider } from "../../firebase";
@@ -5,6 +6,7 @@ import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
 const PartnerLogin = () => {
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -22,10 +24,12 @@ const PartnerLogin = () => {
     e.preventDefault();
 
     try {
+
       const result = await signInWithEmailAndPassword(auth, username, password);
       setLocalStorageEmail(result.user.email);
 
       navigate("/partner-home");
+
     } catch (error) {
       console.error("Error logging in with email/password:", error);
       alert("Enter Valid Credentials.");
@@ -34,10 +38,12 @@ const PartnerLogin = () => {
 
   const googleSignIn = async () => {
     try {
+
       const result = await signInWithPopup(auth, googleProvider);
       setLocalStorageEmail(result.user.email);
 
       navigate("/partner-home");
+
     } catch (error) {
       console.error("Error logging in with Google:", error);
       alert("Login Failed.");
@@ -58,6 +64,7 @@ const PartnerLogin = () => {
         <img
           src={image}
           alt="Loading..."
+
           style={{ width: "80%", maxwidth: "100%", height: "auto" }}
         />
       </div>
@@ -80,6 +87,7 @@ const PartnerLogin = () => {
                 marginLeft: "20px",
               }}
             >
+
               RESTAURANT LOGIN
             </h1>
             <input
@@ -140,10 +148,12 @@ const PartnerLogin = () => {
                 cursor: "pointer",
               }}
             >
+
               Login
             </button>
             <button
               type="button"
+
               style={{
                 padding: "10px 20px",
                 width: "104%",
