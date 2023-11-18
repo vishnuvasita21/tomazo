@@ -3,17 +3,19 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import axios from "axios";
 import "./App.css";
 import { Link } from "react-router-dom";
-import LoginPage from "./views/Login/index";
-import RegistrationPage from "./views/Registration/index";
-import RestaurantList from "./views/RestaurantList/index";
-import image from "./assets/tomazo-1.png";
-import MenuItem from "./views/reservationMenus/MenuItem";
+import LoginPage from "../src/views/Login/index";
+import RegistrationPage from "../src/views/Registration/index";
+import image from "../src/assets/dine-1.png";
 
 function LandingPage() {
   return (
     <div className="landing-page">
       <div className="left">
-        <img src={image} alt="Loading..." />
+        <img
+          src={image}
+          style={{ width: "80%", maxwidth: "100%", height: "auto" }}
+          alt="Loading..."
+        />
       </div>
       <div className="right">
         <div className="content">
@@ -57,8 +59,8 @@ function App() {
           />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<RegistrationPage />} />
-          <Route path="/home" element={<RestaurantList />} />
-          <Route path="/menu" element={<MenuItem />} />
+          {/* <Route path="/home" element={<RestaurantList />} />
+          <Route path="/menu" element={<MenuItem />} /> */}
         </Routes>
       </Router>
     </div>
