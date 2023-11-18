@@ -20,10 +20,12 @@ exports.getRestaurantMenu = onRequest((request, response) => {
   cors(request, response, async () => {
   try {
     const restaurantId = request.query.restaurantId;
+    const type = request.query.name; 
 
     const menuItemsQuery = await firestore
       .collection('restaurantMenu')
       .where('restaurantId', '==', parseInt(restaurantId))
+      .where('type', '==', type)
       .get();
     const menuItems = [];
     menuItemsQuery.forEach((doc) => {
@@ -38,6 +40,121 @@ exports.getRestaurantMenu = onRequest((request, response) => {
   }
 });
 });
+
+exports.deleteResertaurantMenu = onRequest((request, response) => {
+  cors(request, response, async () => {
+  try {
+    const docId = request.query.docId; 
+    const docRef = firestore.collection('restaurantMenu').doc(docId).delete();
+
+    return response.status(200).json({ message: 'Restaurant menu deleted' });
+  } catch (error) {
+    console.error('Error deleting restaurant menu :', error);
+    return response.status(500).json({ error: 'Failed to delete restaurant menu.' });
+  }
+});
+});
+
+exports.addRestaurantMenu = onRequest((request, response) => {
+  cors(request, response, async () => {
+  try {
+    const requestData = request.body; 
+    const docRef = await firestore.collection('restaurantMenu').add(requestData);
+
+    return response.status(201).json({ message: 'menu added', id: docRef.id });
+  } catch (error) {
+    console.error('Error adding menu:', error);
+    return response.status(500).json({ error: 'Failed to add menu.' });
+  }
+});
+});
+
+exports.updateRestaurantMenu = onRequest((request, response) => {
+  cors(request, response, async () => {
+  try {
+    const docId = request.query.docId;
+    const updatedData = request.body; 
+
+    const docRef = firestore.collection('restaurantMenu').doc(docId).update(updatedData);
+
+    return response.status(200).json({ message: 'Restaurant menu updated' });
+  } catch (error) {
+    console.error('Error updating restaurant menu:', error);
+    return response.status(500).json({ error: 'Failed to update restaurant menu.' });
+  }
+});
+});
+
+exports.addRestaurantMenuDiscount = onRequest((request, response) => {
+  cors(request, response, async () => {
+  try {
+    const requestData = request.body; 
+    const docRef = await firestore.collection('restaurantMenuDiscounts').add(requestData);
+
+    return response.status(201).json({ message: 'discounts for the menu added', id: docRef.id });
+  } catch (error) {
+    console.error('Error adding discounts for the menu:', error);
+    return response.status(500).json({ error: 'Failed to add discounts for the menu.' });
+  }
+});
+});
+
+exports.getRestaurantMenuDiscounts = onRequest((request, response) => {
+  cors(request, response, async () => {
+  try {
+    const restaurantId = request.query.restaurantId;
+
+    const menuDiscountQuery = await firestore
+      .collection('restaurantMenuDiscounts')
+      .where('restaurantId', '==', parseInt(restaurantId))
+      .get();
+    const menuDiscounts = [];
+    menuDiscountQuery.forEach((doc) => {
+      menuDiscounts.push({ id: doc.id, ...doc.data() });
+      console.log(doc.id)
+    });
+
+    return response.status(200).json(menuDiscounts);
+  } catch (error) {
+    console.error('Error fetching restaurant discounts on menu:', error);
+    return response.status(500).json({ error: 'Failed to fetch restaurant discounts on menu.' });
+  }
+});
+});
+
+
+exports.updateRestaurantMenuDiscount = onRequest((request, response) => {
+  cors(request, response, async () => {
+  try {
+    const docId = request.query.docId;
+    const updatedData = request.body; 
+
+    const docRef = firestore.collection('restaurantMenuDiscounts').doc(docId).update(updatedData);
+
+    return response.status(200).json({ message: 'discounts for the restaurant menu updated' });
+  } catch (error) {
+    console.error('Error updating discounts for the restaurant menu:', error);
+    return response.status(500).json({ error: 'Failed to update restaurant menu discounts.' });
+  }
+});
+});
+
+
+exports.deleteResertaurantMenuDiscount = onRequest((request, response) => {
+  cors(request, response, async () => {
+  try {
+    const docId = request.query.docId; 
+    const docRef = firestore.collection('restaurantMenuDiscounts').doc(docId).delete();
+
+    return response.status(200).json({ message: 'discounts for the menu deleted' });
+  } catch (error) {
+    console.error('Error deleting restaurant menu discounts:', error);
+    return response.status(500).json({ error: 'Failed to delete restaurant menu discounts.' });
+  }
+});
+});
+
+
 
 
 

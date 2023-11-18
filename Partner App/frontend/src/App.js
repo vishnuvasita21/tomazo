@@ -1,19 +1,16 @@
-import React, { useState, useEffect } from "react";
+
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import axios from "axios";
 import "./App.css";
 import { Link } from "react-router-dom";
-import LoginPage from "./views/Login/index";
-import RegistrationPage from "./views/Registration/index";
-import RestaurantList from "./views/RestaurantList/index";
-import image from "./assets/tomazo-1.png";
-import MenuItem from "./views/reservationMenus/MenuItem";
+import MenuTypes from "./views/Menu/MenuTypes";
+import MenuPage from "./views/Menu/MenuPage";
+import EditMenu from "./views/Menu/EditMenu";
 
 function LandingPage() {
   return (
     <div className="landing-page">
       <div className="left">
-        <img src={image} alt="Loading..." />
       </div>
       <div className="right">
         <div className="content">
@@ -30,35 +27,17 @@ function LandingPage() {
 }
 
 function App() {
-  const [imageLoaded, setImageLoaded] = useState(false);
-
-  useEffect(() => {
-    axios
-      .get("/")
-      .then((response) => {
-        setImageLoaded(true);
-      })
-      .catch((error) => {});
-  }, []);
+  
 
   return (
     <div className="App">
       <Router>
         <Routes>
-          <Route
-            path="/"
-            element={
-              imageLoaded ? (
-                <LandingPage />
-              ) : (
-                <img src={image} alt="Loading..." />
-              )
-            }
-          />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<RegistrationPage />} />
-          <Route path="/home" element={<RestaurantList />} />
-          <Route path="/menu" element={<MenuItem />} />
+          
+          <Route path="/menu" element={<MenuTypes />} />
+          <Route path="/menuItems" element={<MenuPage />} />
+          <Route path="/edit-menu" element={<EditMenu />} />
+          
         </Routes>
       </Router>
     </div>
