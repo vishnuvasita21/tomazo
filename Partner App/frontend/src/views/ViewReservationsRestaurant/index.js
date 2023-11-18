@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "antd";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase";
-import image from "../../assets/tomazo-1.png";
+import image from "../../assets/dine-1.png";
 import axios from "axios";
 
 const redStripStyle = {
