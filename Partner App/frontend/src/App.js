@@ -9,6 +9,7 @@ import EditMenu from "./views/Menu/EditMenu";
 import LoginPage from "../src/views/Login/index";
 import RegistrationPage from "../src/views/Registration/index";
 import image from "../src/assets/dine-1.png";
+import Chatbot from "./Chatbot";
 
 function LandingPage() {
   return (
@@ -48,6 +49,7 @@ function App() {
 
   return (
     <div className="App">
+      <Chatbot/>
       <Router>
         <Routes>
           
