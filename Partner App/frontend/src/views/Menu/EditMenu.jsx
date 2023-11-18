@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 
 const EditMenu = () => {
   const [menuData, setMenuData] = useState([]);
@@ -7,7 +8,10 @@ const EditMenu = () => {
   const [discountValue, setDiscountValue] = useState('');
   const [selectedRows, setSelectedRows] = useState([]);
   const restaurantId = 2;
-  const name = 'Starters';
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const name = searchParams.get('name');
+  const [menuExist, setMenuExist]=useState('no');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -19,6 +23,7 @@ const EditMenu = () => {
         setMenuData(response.data);
         if (response.data.length > 0) {
           setDocId(response.data[0].id);
+          setMenuExist('yes');
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -72,6 +77,7 @@ const handleRemoveItems = () => {
 
   const handleSave = async () => {
     try {
+        if (menuExist === 'yes') {
       await axios.put(
         `https://us-central1-serverless-401214.cloudfunctions.net/updateRestaurantMenu?docId=${docId}`,
         menuData[0],
@@ -82,6 +88,24 @@ const handleRemoveItems = () => {
         }
       );
       alert('Menu updated successfully!');
+    }
+    else{
+        const newMenu = {
+            restaurantId,
+            type: name,
+            menuItems: menuData.map((restaurant) => restaurant.menuItems).flat(),
+          };
+        await axios.post(
+            `https://us-central1-serverless-401214.cloudfunctions.net/addRestaurantMenu`,
+            newMenu,
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          );
+          alert('Menu updated successfully!');
+    }
     } catch (error) {
       console.error('Error updating menu:', error);
       alert('Failed to update menu.');
@@ -123,6 +147,8 @@ const handleRemoveItems = () => {
       updatedMenu[0].menuItems.push(newItem); 
       setMenuData(updatedMenu);
     }
+    else
+    setMenuData([{ menuItems: [newItem] }]);
   };
 
   return (
