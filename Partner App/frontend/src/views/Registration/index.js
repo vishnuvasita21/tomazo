@@ -1,21 +1,32 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+
+import {
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from "firebase/auth";
 import { auth } from "../../firebase";
 
-import image from "../../assets/tomazo-1.png";
+import image from "../../assets/dine-1.png";
 
-const Registration = () => {
+const PartnerRegistration = () => {
+  const [name, setName] = useState("");
+  const [address, setAddress] = useState("");
+  const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
+  const [owner, setOwner] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [cellPhoneNumber, setCellPhoneNumber] = useState("");
-  const [passwordError, setPasswordError] = useState("");
   const [emailError, setEmailError] = useState("");
-  const [cellPhoneNumberError, setCellPhoneNumberError] = useState("");
+  const [nameError, setNameError] = useState("");
+  const [phoneError, setPhoneError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   const validateEmail = (email) => {
-    return email.includes("@");
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+
   };
 
   const validatePassword = (password) => {
@@ -23,8 +34,11 @@ const Registration = () => {
     return passwordRegex.test(password);
   };
 
-  const validateCellPhoneNumber = (phoneNumber) => {
-    return /^\d{10}$/.test(phoneNumber);
+
+  const validatePhoneNumber = (phoneNumber) => {
+    const phoneRegex = /^\d{10}$/;
+    return phoneRegex.test(phoneNumber);
+
   };
 
   const handleBlur = (fieldName) => {
@@ -40,45 +54,66 @@ const Registration = () => {
       } else {
         setPasswordError("");
       }
-    } else if (fieldName === "cellPhoneNumber") {
-      setCellPhoneNumberError(
-        validateCellPhoneNumber(cellPhoneNumber) ? "" : "Invalid phone number"
+
+    } else if (fieldName === "phone") {
+      setPhoneError(
+        validatePhoneNumber(phone) ? "" : "Phone number must be 10 digits"
       );
+    } else if (fieldName === "name") {
+      setNameError(name.trim() !== "" ? "" : "Name cannot be empty");
+
     }
   };
 
   const handleSignup = async () => {
     const isEmailValid = validateEmail(email);
     const isPasswordValid = validatePassword(password);
-    const isCellPhoneNumberValid = validateCellPhoneNumber(cellPhoneNumber);
+
+    const isPhoneNumberValid = validatePhoneNumber(phone);
+    const isNameValid = name.trim() !== "";
+
 
     setEmailError(isEmailValid ? "" : "Invalid email address");
     setPasswordError(
       isPasswordValid ? "" : "Password does not meet requirements"
     );
-    setCellPhoneNumberError(
-      isCellPhoneNumberValid ? "" : "Invalid phone number"
-    );
 
-    if (confirmPassword !== password) {
-      setPasswordError("Passwords do not match");
-    } else {
-      setPasswordError("");
-    }
+    setPhoneError(isPhoneNumberValid ? "" : "Phone number must be 10 digits");
+    setNameError(isNameValid ? "" : "Name cannot be empty");
+
 
     if (
       isEmailValid &&
       isPasswordValid &&
-      isCellPhoneNumberValid &&
+
+      isPhoneNumberValid &&
+      isNameValid &&
+
       confirmPassword === password
     ) {
       try {
         await createUserWithEmailAndPassword(auth, email, password);
-        window.location.href = "/home";
+
+
+        window.location.href = "/partner-home";
+
       } catch (error) {
         console.error("Error signing up with email/password:", error);
         alert(error);
       }
+    }
+  };
+
+
+  const handleGoogleSignup = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      console.log("Google Sign In Successful:", user);
+    } catch (error) {
+      console.error("Error signing up with Google:", error);
+      alert(error);
     }
   };
 
@@ -95,8 +130,10 @@ const Registration = () => {
       >
         <img
           src={image}
-          alt="Loading..."
-          style={{ width: "100%", maxWidth: "100%", height: "auto" }}
+
+          alt="Restaurant Image"
+          style={{ width: "80%", maxWidth: "100%", height: "auto" }}
+
         />
       </div>
       <div
@@ -108,7 +145,9 @@ const Registration = () => {
           justifyContent: "center",
         }}
       >
-        <div style={{ textAlign: "center" }}>
+
+        <div style={{ textAlign: "center", width: "80%" }}>
+
           <form>
             <h1
               style={{
@@ -117,10 +156,78 @@ const Registration = () => {
                 marginBottom: "20px",
               }}
             >
-              SIGNUP
+
+              RESTAURANT SIGNUP
             </h1>
             <input
               type="text"
+              placeholder="Restaurant Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              onBlur={() => handleBlur("name")}
+              style={{
+                padding: "10px",
+                border: `2px solid ${nameError ? "red" : "#ca3433"}`,
+                borderRadius: "5px",
+                outline: "none",
+                width: "100%",
+                marginBottom: "10px",
+              }}
+            />
+            {nameError && <p style={{ color: "red" }}>{nameError}</p>}
+
+            <input
+              type="text"
+              placeholder="Restaurant Address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              onBlur={() => handleBlur("address")}
+              style={{
+                padding: "10px",
+                border: `2px solid ${nameError ? "red" : "#ca3433"}`,
+                borderRadius: "5px",
+                outline: "none",
+                width: "100%",
+                marginBottom: "10px",
+              }}
+            />
+
+            <input
+              type="text"
+              placeholder="Restaurant Phone Number"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              onBlur={() => handleBlur("phone")}
+              style={{
+                padding: "10px",
+                border: `2px solid ${nameError ? "red" : "#ca3433"}`,
+                borderRadius: "5px",
+                outline: "none",
+                width: "100%",
+                marginBottom: "10px",
+              }}
+            />
+            {phoneError && <p style={{ color: "red" }}>{phoneError}</p>}
+
+            <input
+              type="text"
+              placeholder="Owner's Name"
+              value={owner}
+              onChange={(e) => setOwner(e.target.value)}
+              onBlur={() => handleBlur("owner")}
+              style={{
+                padding: "10px",
+                border: `2px solid ${nameError ? "red" : "#ca3433"}`,
+                borderRadius: "5px",
+                outline: "none",
+                width: "100%",
+                marginBottom: "10px",
+              }}
+            />
+
+            <input
+              type="text"
+
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -130,13 +237,17 @@ const Registration = () => {
                 border: `2px solid ${emailError ? "red" : "#ca3433"}`,
                 borderRadius: "5px",
                 outline: "none",
-                width: "50%",
+
+                width: "100%",
+
                 marginBottom: "10px",
               }}
             />
             {emailError && <p style={{ color: "red" }}>{emailError}</p>}
             <input
-              type={passwordError ? "text" : "password"}
+
+              type="password"
+
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -146,13 +257,17 @@ const Registration = () => {
                 border: `2px solid ${passwordError ? "red" : "#ca3433"}`,
                 borderRadius: "5px",
                 outline: "none",
-                width: "50%",
+
+                width: "100%",
+
                 marginBottom: "10px",
               }}
             />
             {passwordError && <p style={{ color: "red" }}>{passwordError}</p>}
             <input
-              type={passwordError ? "text" : "password"}
+
+              type="password"
+
               placeholder="Confirm Password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
@@ -162,29 +277,14 @@ const Registration = () => {
                 border: `2px solid ${passwordError ? "red" : "#ca3433"}`,
                 borderRadius: "5px",
                 outline: "none",
-                width: "50%",
+
+                width: "100%",
+
                 marginBottom: "10px",
               }}
             />
             {passwordError && <p style={{ color: "red" }}>{passwordError}</p>}
-            <input
-              type="text"
-              placeholder="Cell Phone Number"
-              value={cellPhoneNumber}
-              onChange={(e) => setCellPhoneNumber(e.target.value)}
-              onBlur={() => handleBlur("cellPhoneNumber")}
-              style={{
-                padding: "10px",
-                border: `2px solid ${cellPhoneNumberError ? "red" : "#ca3433"}`,
-                borderRadius: "5px",
-                outline: "none",
-                width: "50%",
-                marginBottom: "10px",
-              }}
-            />
-            {cellPhoneNumberError && (
-              <p style={{ color: "red" }}>{cellPhoneNumberError}</p>
-            )}
+
             <button
               type="button"
               onClick={handleSignup}
@@ -196,11 +296,31 @@ const Registration = () => {
                 borderRadius: "5px",
                 cursor: "pointer",
                 marginTop: "10px",
-                width: "50%",
+
+                width: "100%",
+
               }}
             >
               Register
             </button>
+
+            <button
+              type="button"
+              onClick={handleGoogleSignup}
+              style={{
+                padding: "10px 20px",
+                background: "#ca3433",
+                color: "#ffffff",
+                border: "none",
+                borderRadius: "5px",
+                marginTop: "10px",
+                cursor: "pointer",
+                width: "100%",
+              }}
+            >
+              Continue with Google
+            </button>
+
             <p
               style={{ color: "#ca3433", fontSize: "14px", marginTop: "10px" }}
             >
@@ -213,4 +333,5 @@ const Registration = () => {
   );
 };
 
-export default Registration;
+export default PartnerRegistration;
+

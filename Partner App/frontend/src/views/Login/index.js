@@ -1,10 +1,12 @@
-import image from "../../assets/tomazo-1.png";
+
+import image from "../../assets/dine-1.png";
 import React, { useState } from "react";
 import { auth, googleProvider } from "../../firebase";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
-const Login = () => {
+const PartnerLogin = () => {
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -14,13 +16,20 @@ const Login = () => {
     setShowPassword(!showPassword);
   };
 
+  const setLocalStorageEmail = (email) => {
+    localStorage.setItem("userEmail", email);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      await signInWithEmailAndPassword(auth, username, password);
 
-      navigate("/home");
+      const result = await signInWithEmailAndPassword(auth, username, password);
+      setLocalStorageEmail(result.user.email);
+
+      navigate("/partner-home");
+
     } catch (error) {
       console.error("Error logging in with email/password:", error);
       alert("Enter Valid Credentials.");
@@ -29,9 +38,12 @@ const Login = () => {
 
   const googleSignIn = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
 
-      navigate("/home");
+      const result = await signInWithPopup(auth, googleProvider);
+      setLocalStorageEmail(result.user.email);
+
+      navigate("/partner-home");
+
     } catch (error) {
       console.error("Error logging in with Google:", error);
       alert("Login Failed.");
@@ -52,7 +64,8 @@ const Login = () => {
         <img
           src={image}
           alt="Loading..."
-          style={{ width: "100%", maxwidth: "100%", height: "auto" }}
+
+          style={{ width: "80%", maxwidth: "100%", height: "auto" }}
         />
       </div>
       <div
@@ -74,7 +87,8 @@ const Login = () => {
                 marginLeft: "20px",
               }}
             >
-              LOGIN
+
+              RESTAURANT LOGIN
             </h1>
             <input
               type="text"
@@ -134,17 +148,18 @@ const Login = () => {
                 cursor: "pointer",
               }}
             >
-              Submit
+
+              Login
             </button>
             <button
-              type="googleSignIn"
+              type="button"
+
               style={{
                 padding: "10px 20px",
                 width: "104%",
                 background: "#ca3433",
                 color: "#ffffff",
                 border: "none",
-
                 borderRadius: "5px",
                 marginTop: "10px",
                 cursor: "pointer",
@@ -160,4 +175,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default PartnerLogin;

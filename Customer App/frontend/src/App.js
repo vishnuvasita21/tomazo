@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import axios from "axios";
 import "./App.css";
 import { Link } from "react-router-dom";
+import Chatbot from "./Chatbot";
+import image from "../src/assets/tomazo-2.png";
 
 function LandingPage() {
   return (
@@ -38,6 +40,7 @@ function App() {
 
   return (
     <div className="App">
+      <Chatbot/>
       <Router>
         <Routes>
           <Route
