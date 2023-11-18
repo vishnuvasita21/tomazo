@@ -20,10 +20,12 @@ exports.getRestaurantMenu = onRequest((request, response) => {
   cors(request, response, async () => {
   try {
     const restaurantId = request.query.restaurantId;
+    const type = request.query.name; 
 
     const menuItemsQuery = await firestore
       .collection('restaurantMenu')
       .where('restaurantId', '==', parseInt(restaurantId))
+      .where('type', '==', type)
       .get();
     const menuItems = [];
     menuItemsQuery.forEach((doc) => {
