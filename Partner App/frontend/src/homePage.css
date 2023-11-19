@@ -1,0 +1,52 @@
+.landing-page {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    height: 100vh; 
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  .navigation-section,
+  .reservation-section {
+    width: 50%;
+  }
+  
+  .button-card {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .red-button {
+    background-color: #ca3433;
+    color: white;
+    text-decoration: none; 
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+    text-align: center;
+    width: 80%; 
+    transition: background-color 0.3s ease;
+  }
+  
+  .red-button:hover {
+    background-color: darkred;
+  }
+  
+  .reservation-section {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-left: 20px;
+    height: fit-content; 
+  }
+  
+  
