@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, CardContent, Typography, Grid } from '@mui/material';
 import { Link } from 'react-router-dom';
+import '../../../src/menuStyle.css'
 
 const MenuTypes = () => {
     const menuTypes = [
@@ -10,14 +11,14 @@ const MenuTypes = () => {
     ];
 
   return (
-    <div>
+    <div className="menu-container"> 
       <h1>Menu</h1>
 
       <Grid container spacing={3}>
         {menuTypes.map(item => (
           <Grid key={item.id} item xs={12} sm={4}>
             <Card>
-              <CardContent>
+              <CardContent className="card-content"> 
                 <Typography variant="h5" component="h2">
                   <Link
                     to={{
