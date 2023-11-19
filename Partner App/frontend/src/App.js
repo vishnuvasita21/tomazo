@@ -63,7 +63,7 @@ function App() {
       <Chatbot/>
       <Router>
         <Routes>
-        <Route path="/landing" element={<HomePage />} />
+        <Route path="/partner-home" element={<HomePage />} />
           
           <Route
             path="/"
