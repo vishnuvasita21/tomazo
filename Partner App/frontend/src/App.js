@@ -19,6 +19,7 @@ import EditMenu from "./views/Menu/EditMenu";
 import RegistrationPage from "../src/views/Registration/index";
 import image from "../src/assets/dine-1.png";
 import Chatbot from "./Chatbot";
+import DeleteReservationRestaurant from "./views/DeleteReservationRestaurant/index"
 
 function LandingPage() {
   return (
@@ -84,6 +85,7 @@ function App() {
           <Route path="/viewReservationsRestaurant" element={<ViewReservationsRestaurant />} />
           <Route path="/menuItems" element={<MenuPage />} />
           <Route path="/edit-menu" element={<EditMenu />} />
+          <Route path="/deleteReservationRestaurant" element={<DeleteReservationRestaurant />} />
           {/* <Route path="/home" element={<RestaurantList />} />
           <Route path="/menu" element={<MenuItem />} /> */}
         </Routes>
