@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+
 import {
   createUserWithEmailAndPassword,
   signInWithPopup,
@@ -68,6 +69,7 @@ const PartnerRegistration = () => {
   const handleSignup = async () => {
     const isEmailValid = validateEmail(email);
     const isPasswordValid = validatePassword(password);
+
     const isPhoneNumberValid = validatePhoneNumber(phone);
     const isNameValid = name.trim() !== "";
     const rid = await getNextRestaurantId();
@@ -75,6 +77,7 @@ const PartnerRegistration = () => {
     setPasswordError(
       isPasswordValid ? "" : "Password does not meet requirements"
     );
+
     setPhoneError(isPhoneNumberValid ? "" : "Phone number must be 10 digits");
     setNameError(isNameValid ? "" : "Name cannot be empty");
 
@@ -245,7 +248,9 @@ const PartnerRegistration = () => {
                 border: `2px solid ${emailError ? "red" : "#ca3433"}`,
                 borderRadius: "5px",
                 outline: "none",
+
                 width: "100%",
+
                 marginBottom: "10px",
               }}
             />
@@ -261,7 +266,9 @@ const PartnerRegistration = () => {
                 border: `2px solid ${passwordError ? "red" : "#ca3433"}`,
                 borderRadius: "5px",
                 outline: "none",
+
                 width: "100%",
+
                 marginBottom: "10px",
               }}
             />
@@ -277,11 +284,14 @@ const PartnerRegistration = () => {
                 border: `2px solid ${passwordError ? "red" : "#ca3433"}`,
                 borderRadius: "5px",
                 outline: "none",
+
                 width: "100%",
+
                 marginBottom: "10px",
               }}
             />
             {passwordError && <p style={{ color: "red" }}>{passwordError}</p>}
+
             <button
               type="button"
               onClick={handleSignup}
@@ -293,11 +303,13 @@ const PartnerRegistration = () => {
                 borderRadius: "5px",
                 cursor: "pointer",
                 marginTop: "10px",
+
                 width: "100%",
               }}
             >
               Register
             </button>
+
             <button
               type="button"
               onClick={handleGoogleSignup}
@@ -314,6 +326,7 @@ const PartnerRegistration = () => {
             >
               Continue with Google
             </button>
+
             <p
               style={{ color: "#ca3433", fontSize: "14px", marginTop: "10px" }}
             >

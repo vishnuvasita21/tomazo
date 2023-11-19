@@ -1,0 +1,21 @@
+/* CSS file (menuTypesStyles.css) */
+/* Red background for the main container */
+.menu-container {
+    background-color: #ca3433;;
+    color: white;
+    padding: 20px;
+  }
+  
+  /* White background for the cards */
+  .card-content {
+    background-color: white;
+    color: #ca3433;;
+    height: 100%;
+    cursor: pointer; /* Optional: add pointer cursor on hover */
+  }
+  
+  /* Light red background on hover */
+  .card-content:hover {
+    background-color: #ffebee;
+  }
+  
