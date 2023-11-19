@@ -1,8 +1,9 @@
 import image from "../../assets/dine-1.png";
 import React, { useState } from "react";
-import { auth, googleProvider } from "../../firebase";
+import { auth, googleProvider, db } from "../../firebase";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 const PartnerLogin = () => {
   const [username, setUsername] = useState("");
@@ -14,17 +15,22 @@ const PartnerLogin = () => {
     setShowPassword(!showPassword);
   };
 
-  const setLocalStorageEmail = (email) => {
-    localStorage.setItem("userEmail", email);
+  const findRestaurantByOwnerEmail = async (email) => {
+    const q = query(collection(db, "restaurants"), where("email", "==", email));
+    const querySnapshot = await getDocs(q);
+    if (querySnapshot.docs.length > 0) {
+      const restaurantData = querySnapshot.docs[0].data();
+      console.log(restaurantData);
+      sessionStorage.setItem("rid", restaurantData.rid);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const result = await signInWithEmailAndPassword(auth, username, password);
-      setLocalStorageEmail(result.user.email);
-
+      await signInWithEmailAndPassword(auth, username, password);
+      await findRestaurantByOwnerEmail(username);
       navigate("/partner-home");
     } catch (error) {
       console.error("Error logging in with email/password:", error);
@@ -35,8 +41,7 @@ const PartnerLogin = () => {
   const googleSignIn = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
-      setLocalStorageEmail(result.user.email);
-
+      await findRestaurantByOwnerEmail(result.user.email);
       navigate("/partner-home");
     } catch (error) {
       console.error("Error logging in with Google:", error);

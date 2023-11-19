@@ -5,7 +5,8 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
 } from "firebase/auth";
-import { auth } from "../../firebase";
+import { collection, addDoc, getDocs } from "firebase/firestore";
+import { auth, db } from "../../firebase";
 
 import image from "../../assets/dine-1.png";
 
@@ -37,6 +38,11 @@ const PartnerRegistration = () => {
     return phoneRegex.test(phoneNumber);
   };
 
+  const getNextRestaurantId = async () => {
+    const querySnapshot = await getDocs(collection(db, "restaurants"));
+    return querySnapshot.size + 1;
+  };
+
   const handleBlur = (fieldName) => {
     if (fieldName === "email") {
       setEmailError(validateEmail(email) ? "" : "Invalid email address");
@@ -64,7 +70,7 @@ const PartnerRegistration = () => {
     const isPasswordValid = validatePassword(password);
     const isPhoneNumberValid = validatePhoneNumber(phone);
     const isNameValid = name.trim() !== "";
-
+    const rid = await getNextRestaurantId();
     setEmailError(isEmailValid ? "" : "Invalid email address");
     setPasswordError(
       isPasswordValid ? "" : "Password does not meet requirements"
@@ -81,12 +87,33 @@ const PartnerRegistration = () => {
     ) {
       try {
         await createUserWithEmailAndPassword(auth, email, password);
-
-        window.location.href = "/partner-home";
+        await addRestaurantToFirestore({
+          name,
+          address,
+          phone,
+          email,
+          owner,
+          password,
+          rid,
+        });
+        window.location.href = "/login";
       } catch (error) {
         console.error("Error signing up with email/password:", error);
         alert(error);
       }
+    }
+  };
+
+  const addRestaurantToFirestore = async (restaurantData) => {
+    try {
+      const docRef = await addDoc(
+        collection(db, "restaurants"),
+        restaurantData
+      );
+      console.log("Restaurant added with ID: ", docRef.id);
+    } catch (error) {
+      console.error("Error adding restaurant to Firestore: ", error);
+      alert("Error adding restaurant information. Please try again.");
     }
   };
 
@@ -95,6 +122,8 @@ const PartnerRegistration = () => {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
+      const rid = await getNextRestaurantId();
+      await addRestaurantToFirestore({ ...user, rid });
       console.log("Google Sign In Successful:", user);
     } catch (error) {
       console.error("Error signing up with Google:", error);
