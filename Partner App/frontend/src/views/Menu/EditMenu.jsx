@@ -9,7 +9,7 @@ const EditMenu = () => {
   const [docId, setDocId] = useState('');
   const [discountValue, setDiscountValue] = useState('');
   const [selectedRows, setSelectedRows] = useState([]);
-  const restaurantId = parseInt(localStorage.getItem('restaurantId'));
+  const restaurantId = parseInt(sessionStorage.getItem('rid'));
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const name = searchParams.get('name');

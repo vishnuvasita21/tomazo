@@ -7,7 +7,7 @@ const MenuPage = () => {
   const [filteredMenu, setFilteredMenu] = useState([]);
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const restaurantId =  parseInt(localStorage.getItem('restaurantId'));
+  const restaurantId =  parseInt(sessionStorage.getItem('rid'));
   const name = searchParams.get('name');
 
   useEffect(() => {

@@ -6,7 +6,8 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
 } from "firebase/auth";
-import { auth } from "../../firebase";
+import { collection, addDoc, getDocs } from "firebase/firestore";
+import { auth, db } from "../../firebase";
 
 import image from "../../assets/dine-1.png";
 
@@ -26,7 +27,6 @@ const PartnerRegistration = () => {
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
-
   };
 
   const validatePassword = (password) => {
@@ -34,11 +34,14 @@ const PartnerRegistration = () => {
     return passwordRegex.test(password);
   };
 
-
   const validatePhoneNumber = (phoneNumber) => {
     const phoneRegex = /^\d{10}$/;
     return phoneRegex.test(phoneNumber);
+  };
 
+  const getNextRestaurantId = async () => {
+    const querySnapshot = await getDocs(collection(db, "restaurants"));
+    return querySnapshot.size + 1;
   };
 
   const handleBlur = (fieldName) => {
@@ -54,14 +57,12 @@ const PartnerRegistration = () => {
       } else {
         setPasswordError("");
       }
-
     } else if (fieldName === "phone") {
       setPhoneError(
         validatePhoneNumber(phone) ? "" : "Phone number must be 10 digits"
       );
     } else if (fieldName === "name") {
       setNameError(name.trim() !== "" ? "" : "Name cannot be empty");
-
     }
   };
 
@@ -71,8 +72,7 @@ const PartnerRegistration = () => {
 
     const isPhoneNumberValid = validatePhoneNumber(phone);
     const isNameValid = name.trim() !== "";
-
-
+    const rid = await getNextRestaurantId();
     setEmailError(isEmailValid ? "" : "Invalid email address");
     setPasswordError(
       isPasswordValid ? "" : "Password does not meet requirements"
@@ -81,22 +81,25 @@ const PartnerRegistration = () => {
     setPhoneError(isPhoneNumberValid ? "" : "Phone number must be 10 digits");
     setNameError(isNameValid ? "" : "Name cannot be empty");
 
-
     if (
       isEmailValid &&
       isPasswordValid &&
-
       isPhoneNumberValid &&
       isNameValid &&
-
       confirmPassword === password
     ) {
       try {
         await createUserWithEmailAndPassword(auth, email, password);
-
-
-        window.location.href = "/partner-home";
-
+        await addRestaurantToFirestore({
+          name,
+          address,
+          phone,
+          email,
+          owner,
+          password,
+          rid,
+        });
+        window.location.href = "/login";
       } catch (error) {
         console.error("Error signing up with email/password:", error);
         alert(error);
@@ -104,12 +107,26 @@ const PartnerRegistration = () => {
     }
   };
 
+  const addRestaurantToFirestore = async (restaurantData) => {
+    try {
+      const docRef = await addDoc(
+        collection(db, "restaurants"),
+        restaurantData
+      );
+      console.log("Restaurant added with ID: ", docRef.id);
+    } catch (error) {
+      console.error("Error adding restaurant to Firestore: ", error);
+      alert("Error adding restaurant information. Please try again.");
+    }
+  };
 
   const handleGoogleSignup = async () => {
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
+      const rid = await getNextRestaurantId();
+      await addRestaurantToFirestore({ ...user, rid });
       console.log("Google Sign In Successful:", user);
     } catch (error) {
       console.error("Error signing up with Google:", error);
@@ -130,10 +147,8 @@ const PartnerRegistration = () => {
       >
         <img
           src={image}
-
           alt="Restaurant Image"
           style={{ width: "80%", maxWidth: "100%", height: "auto" }}
-
         />
       </div>
       <div
@@ -145,9 +160,7 @@ const PartnerRegistration = () => {
           justifyContent: "center",
         }}
       >
-
         <div style={{ textAlign: "center", width: "80%" }}>
-
           <form>
             <h1
               style={{
@@ -156,7 +169,6 @@ const PartnerRegistration = () => {
                 marginBottom: "20px",
               }}
             >
-
               RESTAURANT SIGNUP
             </h1>
             <input
@@ -227,7 +239,6 @@ const PartnerRegistration = () => {
 
             <input
               type="text"
-
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -245,9 +256,7 @@ const PartnerRegistration = () => {
             />
             {emailError && <p style={{ color: "red" }}>{emailError}</p>}
             <input
-
               type="password"
-
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -265,9 +274,7 @@ const PartnerRegistration = () => {
             />
             {passwordError && <p style={{ color: "red" }}>{passwordError}</p>}
             <input
-
               type="password"
-
               placeholder="Confirm Password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
@@ -298,7 +305,6 @@ const PartnerRegistration = () => {
                 marginTop: "10px",
 
                 width: "100%",
-
               }}
             >
               Register
@@ -334,4 +340,3 @@ const PartnerRegistration = () => {
 };
 
 export default PartnerRegistration;
-
