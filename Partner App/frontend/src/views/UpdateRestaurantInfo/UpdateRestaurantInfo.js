@@ -48,6 +48,7 @@ function UpdateRestaurantInfo() {
         ENDPOINT = ENDPOINT.concat(restaurantId);
         console.log("Getting API Endpoint: ", ENDPOINT)
         const response = await axios.get(ENDPOINT);
+        console.log("Response data: ", response.data);
         setData(response.data);
       } catch (err) {
         setError(err);
@@ -181,9 +182,22 @@ const handleSubmit = (e) => {
   };
 
 //const FORM_ENDPOINT = "https://0520gbfb3k.execute-api.us-east-2.amazonaws.com/setClose";
-
-//TODO: Write this endpoint
 const FORM_ENDPOINT = "https://0520gbfb3k.execute-api.us-east-2.amazonaws.com/updateRestaurantInfo";
+
+const handleEdit = (field, value) => {
+
+  const restaurantID = data.RestaurantID;
+
+  let updatedData = [data];
+  
+  updatedData[field] = value;
+
+  updatedData["RestaurantID"] = restaurantID;
+
+  console.log("Updated data: ", updatedData);
+
+  setData(updatedData);
+};
 
 // #REFERENCE: https://herotofu.com/solutions/guides/react-post-form-data-to-api
 
@@ -208,25 +222,46 @@ const FORM_ENDPOINT = "https://0520gbfb3k.execute-api.us-east-2.amazonaws.com/up
           onSubmit={handleSubmit}
           METHOD="PUT"
         >
+
+          <label for="restaurantname">Restaurant Name:</label>
           <input
             type="text"
-            placeholder={data.CloseHour}
+            value={data.RestaurantName}
+            name="RestaurantName"
+            onChange={(e) => handleEdit('RestaurantName', e.target.value)}
+            required
+          />
+          <br/>
+          
+
+          <label for="closehour">Close Hour:</label>
+          <input
+            type="text"
+            value={data.CloseHour}
             name="CloseHour"
+            onChange={(e) => handleEdit('CloseHour', e.target.value)}
             required
           />
-
+          <br/>
+          
+          <label for="openhour">Open Hour:</label>
           <input
             type="text"
-            placeholder={data.OpenHour}
+            value={data.OpenHour}
             name="OpenHour"
+            onChange={(e) => handleEdit('OpenHour', e.target.value)}
             required
           />
+          <br/>
+          
 
+          <label for="currentlyClosed">Currently Closed:</label>
           <select id="CurrentlyClosed" name="CurrentlyClosed">
-            placeholder={data.CurrentlyClosed}
             <option value="True">True</option>
             <option value="False">False</option>
           </select>
+          <br/>
+          
 
            <input 
              type="hidden"  
