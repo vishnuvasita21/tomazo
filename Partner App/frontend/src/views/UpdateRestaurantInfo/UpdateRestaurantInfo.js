@@ -34,7 +34,6 @@ const logoutButtonStyle = {
 
 function UpdateRestaurantInfo() {
   const restaurantId = parseInt(sessionStorage.getItem('rid'));
-  //console.log(restaurantId);
   const navigate = useNavigate();
   const [data, setData] = useState([]); //useState(null); 
   const [loading, setLoading] = useState(true);
@@ -61,8 +60,6 @@ function UpdateRestaurantInfo() {
   }, []);
   //ends here
 
-  console.log("Open Hour:", data.OpenHour);
-  
   const navigateToMenu = (RestaurantID) => {
     navigate('/menu', { state: { RestaurantID: RestaurantID } }); 
   };
@@ -151,7 +148,9 @@ const handleSubmit = (e) => {
       .filter((input) => input.name)
       .reduce((obj, input) => Object.assign(obj, { [input.name]: input.value }), {});
 
-    console.log(data);
+
+    console.log("Form data submitted with contents: ", data);
+
     data.RestaurantID = parseInt(data.RestaurantID);
 
     fetch(finalFormEndpoint, {
@@ -223,11 +222,18 @@ const FORM_ENDPOINT = "https://0520gbfb3k.execute-api.us-east-2.amazonaws.com/up
             required
           />
 
-          <select id="bookingStatus" name="bookingStatus">
+          <select id="CurrentlyClosed" name="CurrentlyClosed">
             placeholder={data.CurrentlyClosed}
             <option value="True">True</option>
             <option value="False">False</option>
           </select>
+
+           <input 
+             type="hidden"  
+             name="RestaurantID" 
+             value={parseInt(data.RestaurantID)}
+
+           />
 
           <input
             type="submit"
