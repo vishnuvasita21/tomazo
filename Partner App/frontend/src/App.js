@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import LoginPage from "./views/Login/index";
 import RestaurantList from "./views/RestaurantList/index";
 import MenuItem from "./views/reservationMenus/MenuItem";
-import UpdateRestaurantInfo from "./views/UpdateRestaurantInfo/index";
+import UpdateRestaurantInfo from "./views/UpdateRestaurantInfo/UpdateRestaurantInfo";
 import UpdateRestaurantOpen from "./views/UpdateRestaurantOpen/index";
 import UpdateRestaurantStatus from "./views/UpdateRestaurantStatus/index";
 import UpdateReservationStatus from "./views/UpdateReservationStatus/index";

@@ -6,7 +6,6 @@ import { signOut } from "firebase/auth";
 import { auth } from "../../firebase";
 import image from "../../assets/dine-1.png";
 import axios from "axios";
-import Form from "./Form";
 
 const redStripStyle = {
   backgroundColor: "#ca3433",
@@ -34,15 +33,22 @@ const logoutButtonStyle = {
 // https://herotofu.com/solutions/guides/react-post-form-data-to-api
 
 function UpdateRestaurantInfo() {
+  const restaurantId = parseInt(sessionStorage.getItem('rid'));
+  //console.log(restaurantId);
   const navigate = useNavigate();
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]); //useState(null); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [status, setStatus] = useState('');
+  const [message, setMessage] = useState('');
   //api
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://0520gbfb3k.execute-api.us-east-2.amazonaws.com/getAllRestaurants');
+        let ENDPOINT = "https://0520gbfb3k.execute-api.us-east-2.amazonaws.com/getRestaurantByID/";
+        ENDPOINT = ENDPOINT.concat(restaurantId);
+        console.log("Getting API Endpoint: ", ENDPOINT)
+        const response = await axios.get(ENDPOINT);
         setData(response.data);
       } catch (err) {
         setError(err);
@@ -54,6 +60,8 @@ function UpdateRestaurantInfo() {
     fetchData();
   }, []);
   //ends here
+
+  console.log("Open Hour:", data.OpenHour);
   
   const navigateToMenu = (RestaurantID) => {
     navigate('/menu', { state: { RestaurantID: RestaurantID } }); 
@@ -133,6 +141,51 @@ function UpdateRestaurantInfo() {
   if (loading) return <p>Loading..</p>;
   if (error) return <p>Error!</p>;
 
+const handleSubmit = (e) => {
+    e.preventDefault();
+    setStatus('loading');
+    setMessage('');
+
+    const finalFormEndpoint = e.target.action;
+    let data = Array.from(e.target.elements)
+      .filter((input) => input.name)
+      .reduce((obj, input) => Object.assign(obj, { [input.name]: input.value }), {});
+
+    console.log(data);
+    data.RestaurantID = parseInt(data.RestaurantID);
+
+    fetch(finalFormEndpoint, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => {
+        if (response.status !== 200) {
+          throw new Error(response.statusText);
+        }
+
+        return response.json();
+      })
+      .then(() => {
+        setMessage("Thanks!");
+        setStatus('success');
+      })
+      .catch((err) => {
+        setMessage(err.toString());
+        setStatus('error');
+      });
+
+      return { handleSubmit, status, message };
+  };
+
+//const FORM_ENDPOINT = "https://0520gbfb3k.execute-api.us-east-2.amazonaws.com/setClose";
+
+//TODO: Write this endpoint
+const FORM_ENDPOINT = "https://0520gbfb3k.execute-api.us-east-2.amazonaws.com/updateRestaurantInfo";
+
 // #REFERENCE: https://herotofu.com/solutions/guides/react-post-form-data-to-api
 
   return (
@@ -151,11 +204,41 @@ function UpdateRestaurantInfo() {
       <div>
         <h1>Update Restaurant Information</h1>
 
-        <Form />
+        <form
+          action={FORM_ENDPOINT}
+          onSubmit={handleSubmit}
+          METHOD="PUT"
+        >
+          <input
+            type="text"
+            placeholder={data.CloseHour}
+            name="CloseHour"
+            required
+          />
+
+          <input
+            type="text"
+            placeholder={data.OpenHour}
+            name="OpenHour"
+            required
+          />
+
+          <select id="bookingStatus" name="bookingStatus">
+            placeholder={data.CurrentlyClosed}
+            <option value="True">True</option>
+            <option value="False">False</option>
+          </select>
+
+          <input
+            type="submit"
+            value="submit"
+          />
+
+        </form>
         
       </div>
     </div>
   );
-}
 
+}
 export default UpdateRestaurantInfo;
