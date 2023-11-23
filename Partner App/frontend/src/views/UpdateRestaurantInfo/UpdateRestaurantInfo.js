@@ -61,14 +61,6 @@ function UpdateRestaurantInfo() {
   }, []);
   //ends here
 
-  const navigateToMenu = (RestaurantID) => {
-    navigate('/menu', { state: { RestaurantID: RestaurantID } }); 
-  };
-
-  const navigateToTestUpdateTimes = (RestaurantID) => {
-    navigate('/updateRestaurantInfo', { state: { RestaurantID: RestaurantID } }); 
-  };
-
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -172,10 +164,12 @@ const handleSubmit = (e) => {
       .then(() => {
         setMessage("Thanks!");
         setStatus('success');
+        alert("Restaurant information updated!");
       })
       .catch((err) => {
         setMessage(err.toString());
         setStatus('error');
+        alert("Error updating restaurant information!");
       });
 
       return { handleSubmit, status, message };
