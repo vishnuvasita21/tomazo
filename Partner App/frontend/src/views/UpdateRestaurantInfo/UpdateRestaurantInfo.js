@@ -232,28 +232,24 @@ const handleEdit = (field, value) => {
             required
           />
           <br/>
-          
+
+          <label for="openhour">Open Hour:</label>
+          <input 
+            type="time"
+            name="OpenHour"
+            value={data.OpenHour}
+            onChange={(e) => handleEdit('OpenHour', e.target.value)}
+            />
+          <br/>
 
           <label for="closehour">Close Hour:</label>
-          <input
-            type="text"
-            value={data.CloseHour}
+          <input 
+            type="time"
             name="CloseHour"
+            value={data.CloseHour}
             onChange={(e) => handleEdit('CloseHour', e.target.value)}
-            required
-          />
+            />
           <br/>
-          
-          <label for="openhour">Open Hour:</label>
-          <input
-            type="text"
-            value={data.OpenHour}
-            name="OpenHour"
-            onChange={(e) => handleEdit('OpenHour', e.target.value)}
-            required
-          />
-          <br/>
-          
 
           <label for="currentlyClosed">Currently Closed:</label>
           <select id="CurrentlyClosed" name="CurrentlyClosed">
@@ -262,7 +258,6 @@ const handleEdit = (field, value) => {
           </select>
           <br/>
           
-
            <input 
              type="hidden"  
              name="RestaurantID" 
