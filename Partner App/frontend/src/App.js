@@ -8,8 +8,8 @@ import LoginPage from "./views/Login/index";
 import RestaurantList from "./views/RestaurantList/index";
 import MenuItem from "./views/reservationMenus/MenuItem";
 import UpdateRestaurantInfo from "./views/UpdateRestaurantInfo/UpdateRestaurantInfo";
-import UpdateRestaurantOpen from "./views/UpdateRestaurantOpen/index";
-import UpdateRestaurantStatus from "./views/UpdateRestaurantStatus/index";
+
+
 import UpdateReservationStatus from "./views/UpdateReservationStatus/index";
 import AddTable from "./views/AddTable/AddTable";
 import ViewReservationsRestaurant from "./views/ViewReservationsRestaurant/ViewReservationsRestaurant";
@@ -81,8 +81,8 @@ function App() {
           <Route path="/home" element={<RestaurantList />} />
           <Route path="/menu" element={<MenuTypes />} />
           <Route path="/updateRestaurantInfo" element={<UpdateRestaurantInfo />} />
-          <Route path="/updateRestaurantOpen" element={<UpdateRestaurantOpen />} />
-          <Route path="/updateRestaurantStatus" element={<UpdateRestaurantStatus />} />
+
+
           <Route path="/updateReservationStatus" element={<UpdateReservationStatus />} />
           <Route path="/addTable" element={<AddTable />} />
           <Route path="/viewReservationsRestaurant" element={<ViewReservationsRestaurant />} />

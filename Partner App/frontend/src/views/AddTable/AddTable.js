@@ -142,10 +142,10 @@ const handleSubmit = (e) => {
       .filter((input) => input.name)
       .reduce((obj, input) => Object.assign(obj, { [input.name]: input.value }), {});
 
-
+    data.RestaurantID = parseInt(restaurantId);
+    data.TableID = parseInt(data.TableID);
+    data.TableCapacity = parseInt(data.TableCapacity);
     console.log("Form data submitted with contents: ", data);
-
-    data.RestaurantID = parseInt(data.RestaurantID);
 
     fetch(finalFormEndpoint, {
       method: 'PUT',
@@ -181,15 +181,9 @@ const FORM_ENDPOINT = "https://0520gbfb3k.execute-api.us-east-2.amazonaws.com/ad
 
 const handleEdit = (field, value) => {
 
-  const restaurantID = data.RestaurantID;
-
   let updatedData = [data];
   
   updatedData[field] = value;
-
-  updatedData["RestaurantID"] = restaurantID;
-
-  console.log("Updated data: ", updatedData);
 
   setData(updatedData);
 };
@@ -213,45 +207,59 @@ const handleEdit = (field, value) => {
 
         <h1>Update Table Information</h1>
 
-        <form
-          action={FORM_ENDPOINT}
-          onSubmit={handleSubmit}
-          METHOD="PUT"
-        >
+        <table>
+          <form
+            action={FORM_ENDPOINT}
+            onSubmit={handleSubmit}
+            METHOD="PUT"
+          >
+            <thead>
+              <th>
+                <label for="tableid">Table Number:</label>
+              </th>
+              <th>
+                <label for="tablecapacity">Table Capacity:</label>
+              </th>
+            </thead>
+            <tbody>
+              {data.map((tableRecord, tableIndex) => (
+              <tr>
+                <td>
+                  <input
+                    type="text"
+                    value={tableRecord.TableID}
+                    name="TableID"
+                    readonly
+                    required
+                  />
+                </td>
+                <td>
+                  <input 
+                    type="text"
+                    name="TableCapacity"
+                    value={tableRecord.TableCapacity}
+                    onChange={(e) => handleEdit('TableCapacity', e.target.value)}
+                    />
+                </td>
 
-          <label for="tableid">Table Number:</label>
-          <input
-            type="text"
-            value={data[0].TableID}
-            name="TableID"
-            //onChange={(e) => handleEdit('TableID', e.target.value)}
-            required
-          />
-          <br/>
+                <td>
+                  <input
+                    type="submit"
+                    value="update"
+                  />
+                </td>
 
-          <label for="tablecapacity">Table Capacity:</label>
-          <input 
-            type="text"
-            name="TableCapacity"
-            value={data[0].TableCapacity}
-            onChange={(e) => handleEdit('TableCapacity', e.target.value)}
-            />
-          <br/>
-
-           <input 
-             type="hidden"  
-             name="RestaurantID" 
-             value={parseInt(data.RestaurantID)}
-
-           />
-
-          <input
-            type="submit"
-            value="submit"
-          />
-
-        </form>
-        
+                <input 
+                 type="hidden"  
+                 name="RestaurantID" 
+                 value={parseInt(restaurantId)}
+                />
+              </tr>
+            ))
+          }
+            </tbody>
+          </form>
+        </table>
       </div>
     </div>
   );
