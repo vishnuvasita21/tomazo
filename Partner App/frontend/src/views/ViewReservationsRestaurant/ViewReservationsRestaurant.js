@@ -29,8 +29,11 @@ const logoutButtonStyle = {
 };
 
 function ViewReservationsRestaurant() {
+  const restaurantId = parseInt(sessionStorage.getItem('rid'));
   const navigate = useNavigate();
-  const [data, setData] = useState([]);
+  const [data, setData] = useState([]); //useState(null); 
+  const [status, setStatus] = useState('');
+  const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   //api
@@ -42,7 +45,7 @@ function ViewReservationsRestaurant() {
         API_ENDPOINT = API_ENDPOINT.concat(restaurantId);
         console.log("Calling API endpoint: ", API_ENDPOINT);
         const response = await axios.get(API_ENDPOINT);
-        // console.log(JSON.stringify(response.data));
+        console.log(JSON.stringify(response.data));
         setData(Object.values(response.data));
       } catch (err) {
         setError(err);
@@ -127,8 +130,108 @@ function ViewReservationsRestaurant() {
     flexDirection: 'row',
   }
   //if (loading) return <p>Loading..</p>;
-  if (error) return <p>Error!</p>;
+  //if (error) return <p>Error!</p>;
+
+const handleEdit = (tableIndex, field, value) => {
+
+  let updatedData = [...data];
   
+  updatedData[tableIndex][field] = value;
+
+  setData(updatedData);
+};
+
+const handleSubmit = (e, tableIndex) => {
+    e.preventDefault();
+    setStatus('loading');
+    setMessage('');
+
+    console.log(e);
+
+    const FORM_ENDPOINT = "https://0520gbfb3k.execute-api.us-east-2.amazonaws.com/addTable";
+
+    let dataToSubmit = data[tableIndex]; // Need to update this with index of current item
+
+    dataToSubmit.RestaurantID = parseInt(restaurantId);
+    dataToSubmit.TableID = parseInt(dataToSubmit.TableID);
+    dataToSubmit.TableCapacity = parseInt(dataToSubmit.TableCapacity);
+    console.log("Data submitted with contents: ", dataToSubmit);
+
+    fetch(FORM_ENDPOINT, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(dataToSubmit),
+    })
+      .then((response) => {
+        if (response.status !== 200) {
+          throw new Error(response.statusText);
+        }
+
+        return response.json();
+      })
+      .then(() => {
+        setMessage("Thanks!");
+        setStatus('success');
+        alert("Table information updated!");
+      })
+      .catch((err) => {
+        setMessage(err.toString());
+        setStatus('error');
+        alert("Error updating table information!");
+      });
+
+      return { handleSubmit, status, message };
+  };
+  
+
+const handleDelete = (e, tableIndex) => {
+    e.preventDefault();
+    setStatus('loading');
+    setMessage('');
+
+    console.log(e);
+
+    const FORM_ENDPOINT = "https://0520gbfb3k.execute-api.us-east-2.amazonaws.com/addTable";
+
+    let dataToSubmit = data[tableIndex]; // Need to update this with index of current item
+
+    dataToSubmit.RestaurantID = parseInt(restaurantId);
+    dataToSubmit.TableID = parseInt(dataToSubmit.TableID);
+    dataToSubmit.TableCapacity = parseInt(dataToSubmit.TableCapacity);
+    console.log("Data submitted with contents: ", dataToSubmit);
+
+    fetch(FORM_ENDPOINT, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(dataToSubmit),
+    })
+      .then((response) => {
+        if (response.status !== 200) {
+          throw new Error(response.statusText);
+        }
+
+        return response.json();
+      })
+      .then(() => {
+        setMessage("Thanks!");
+        setStatus('success');
+        alert("Table information updated!");
+      })
+      .catch((err) => {
+        setMessage(err.toString());
+        setStatus('error');
+        alert("Error updating table information!");
+      });
+
+      return { handleSubmit, status, message };
+  };
+
   return (
     <div>
       <div style={redStripStyle}>
@@ -144,29 +247,101 @@ function ViewReservationsRestaurant() {
 
       <div>
         <h1>Reservations List</h1>
-        <div style={cardStyle}>
-        {data.map(item => (
-          <div style={cardView} key={item.id}>
-            <div style={detailsStyle}>
-              <h2 style={titleStyle}>{item.RestaurantName}</h2>
-              <p style={timingStyle}>TableID: {item.TableID}</p>
-              <p style={timingStyle}>BookingDate: {item.BookingDate}</p>
-              <p style={timingStyle}>BookingStart: {item.BookingStart}</p>
-              <p style={timingStyle}>BookingEnd: {item.BookingEnd}</p>
-              <p style={timingStyle}>UserID: {item.UserID}</p>
-              <p style={timingStyle}>RestaurantID: {item.RestaurantID}</p>
-              <p style={timingStyle}>BookingStatus : {item.BookingStatus}</p>
-            
-              <button onClick={() => navigateToManageReservations(item.RestaurantID)}>
-                Manage Reservations
-              </button>
+        <table>
+          <thead>
+            <th>
+              <label> Restaurant Name </label>
+            </th>
+            <th>
+              <label> Table Number </label>
+            </th>
+            <th>
+              <label> Booking Date </label>
+            </th>
+            <th>
+              <label> Booking Start Time </label>
+            </th>
+            <th>
+              <label> Booking End Time </label>
+            </th>
+            <th>
+              <label> User ID </label>
+            </th>
+            <th>
+              <label> Booking Status </label>
+            </th>        
+          </thead>
+          <tbody>
+              {data.map((item) => (
+              <tr>
 
-            </div>
-          </div>
-        ))}
+                    <td>
+                      <p style={timingStyle}>{item.RestaurantName}</p>
+                    </td>
+
+                    <td>
+                      <p style={timingStyle}>{item.TableID}</p>
+                    </td>
+
+                    <td>
+                      <input
+                        type="date"
+                        value={item.BookingDate}
+                        name="BookingDate"
+                        onChange={(e) => handleEdit(item.restaurantID, 'BookingDate', e.target.value)}
+                        required
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="time"
+                        value={item.BookingStart}
+                        name="BookingStart"
+                        onChange={(e) => handleEdit(item.restaurantID, 'BookingStart', e.target.value)}
+                        required
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="time"
+                        value={item.BookingEnd}
+                        name="BookingEnd"
+                        onChange={(e) => handleEdit(item.restaurantID, 'BookingEnd', e.target.value)}
+                        required
+                      />
+                    </td>
+
+                    <td>
+                      <p style={timingStyle}>{item.UserID}</p>
+                    </td>
+
+                    <td>
+                      <input
+                        type="text"
+                        value={item.BookingStatus}
+                        name="BookingStatus"
+                        onChange={(e) => handleEdit(item.restaurantID, 'BookingStatus', e.target.value)}
+                        required
+                      />
+                    </td>
+                    <td>
+                      <button onClick={(e) => handleSubmit(e, item.restaurantID)}>
+                        Update
+                      </button>
+                    </td>
+
+                    <td>
+                      <button onClick={(e) => handleDelete(e, item.restaurantID)}>
+                        Delete
+                      </button>
+                    </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
       </div>
-    </div>
+        
   );
 }
 
