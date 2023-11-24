@@ -187,6 +187,22 @@ const handleEdit = (tableIndex, field, value) => {
   setData(updatedData);
 };
 
+const handleAddTable = () => {
+
+  const newTable = {
+
+    TableID: '',
+    RestaurantID: restaurantId,
+    TableCapacity: '',
+    TableStatus: '',
+  };
+
+  const updatedData = [...data];
+  updatedData.push(newTable); 
+  setData(updatedData);
+
+};
+
 // #REFERENCE: https://herotofu.com/solutions/guides/react-post-form-data-to-api
 
   return (
@@ -223,7 +239,7 @@ const handleEdit = (tableIndex, field, value) => {
                   type="text"
                   value={tableRecord.TableID}
                   name="TableID"
-                  readonly
+                  onChange={(e) => handleEdit(tableIndex, 'TableID', e.target.value)}
                   required
                 />
               </td>
@@ -233,6 +249,7 @@ const handleEdit = (tableIndex, field, value) => {
                   name="TableCapacity"
                   value={tableRecord.TableCapacity}
                   onChange={(e) => handleEdit(tableIndex, 'TableCapacity', e.target.value)}
+                  required
                   />
               </td>
 
@@ -245,6 +262,7 @@ const handleEdit = (tableIndex, field, value) => {
         }
           </tbody>
         </table>
+        <button onClick={handleAddTable}>Add Table</button>
       </div>
     </div>
   );
