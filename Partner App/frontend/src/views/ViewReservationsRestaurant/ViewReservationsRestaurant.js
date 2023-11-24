@@ -135,6 +135,8 @@ function ViewReservationsRestaurant() {
 const handleEdit = (tableIndex, field, value) => {
 
   let updatedData = [...data];
+
+  console.log(updatedData);
   
   updatedData[tableIndex][field] = value;
 
@@ -146,19 +148,48 @@ const handleSubmit = (e, tableIndex) => {
     setStatus('loading');
     setMessage('');
 
-    console.log(e);
+    console.log(tableIndex);
 
-    const FORM_ENDPOINT = "https://0520gbfb3k.execute-api.us-east-2.amazonaws.com/addTable";
 
     let dataToSubmit = data[tableIndex]; // Need to update this with index of current item
 
-    dataToSubmit.RestaurantID = parseInt(restaurantId);
-    dataToSubmit.TableID = parseInt(dataToSubmit.TableID);
-    dataToSubmit.TableCapacity = parseInt(dataToSubmit.TableCapacity);
-    console.log("Data submitted with contents: ", dataToSubmit);
+    console.log("TESTING", dataToSubmit);
+
+    const RESTAURANT_ID = restaurantId;
+    console.log("RESTAURANT_ID: ", RESTAURANT_ID);
+
+    const TABLE_ID = dataToSubmit.TableID;
+    console.log("TABLE_ID: ", TABLE_ID);
+
+    const USER_ID = dataToSubmit.UserID;
+    console.log("USER_ID: ", USER_ID);
+
+    const START_TIME = dataToSubmit.BookingStart;
+    console.log("START_TIME: ", START_TIME);
+
+    const END_TIME = dataToSubmit.BookingEnd;
+    console.log("END_TIME: ", END_TIME);
+
+    const BOOKING_DATE = dataToSubmit.BookingDate;
+    console.log("BOOKING_DATE: ", BOOKING_DATE);
+
+
+    //TODO: Make a separate call to the update booking status endpoint.
+    //const BOOKING_STATUS = dataToSubmit.BookingStatus;
+    //console.log("BOOKING_STATUS: ", BOOKING_STATUS);
+
+    let FORM_ENDPOINT = 'https://bookreservation-ez3fpdepla-uc.a.run.app/bookReservation?';
+    FORM_ENDPOINT = FORM_ENDPOINT.concat('userID=' + String(USER_ID)+ '&');
+    FORM_ENDPOINT = FORM_ENDPOINT.concat('restaurantID=' + String(RESTAURANT_ID)+ '&');
+    FORM_ENDPOINT = FORM_ENDPOINT.concat('bookingStart=' + String(START_TIME)+ '&');
+    FORM_ENDPOINT = FORM_ENDPOINT.concat('bookingEnd=' + String(END_TIME)+ '&');
+    FORM_ENDPOINT = FORM_ENDPOINT.concat('bookingDate=' + String(BOOKING_DATE)+ '&');
+    FORM_ENDPOINT = FORM_ENDPOINT.concat('tableID=' + String(TABLE_ID));
+
+    console.log("Submitting data to API endpoint: ", FORM_ENDPOINT);
 
     fetch(FORM_ENDPOINT, {
-      method: 'PUT',
+      method: 'GET',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -272,66 +303,66 @@ const handleDelete = (e, tableIndex) => {
             </th>        
           </thead>
           <tbody>
-              {data.map((item) => (
+              {data.map((reservationRecord, reservationIndex) => (
               <tr>
 
                     <td>
-                      <p style={timingStyle}>{item.RestaurantName}</p>
+                      <p style={timingStyle}>{reservationRecord.RestaurantName}</p>
                     </td>
 
                     <td>
-                      <p style={timingStyle}>{item.TableID}</p>
+                      <p style={timingStyle}>{reservationRecord.TableID}</p>
                     </td>
 
                     <td>
                       <input
                         type="date"
-                        value={item.BookingDate}
+                        value={reservationRecord.BookingDate}
                         name="BookingDate"
-                        onChange={(e) => handleEdit(item.restaurantID, 'BookingDate', e.target.value)}
+                        onChange={(e) => handleEdit(reservationIndex, 'BookingDate', e.target.value)}
                         required
                       />
                     </td>
                     <td>
                       <input
                         type="time"
-                        value={item.BookingStart}
+                        value={reservationRecord.BookingStart}
                         name="BookingStart"
-                        onChange={(e) => handleEdit(item.restaurantID, 'BookingStart', e.target.value)}
+                        onChange={(e) => handleEdit(reservationIndex, 'BookingStart', e.target.value)}
                         required
                       />
                     </td>
                     <td>
                       <input
                         type="time"
-                        value={item.BookingEnd}
+                        value={reservationRecord.BookingEnd}
                         name="BookingEnd"
-                        onChange={(e) => handleEdit(item.restaurantID, 'BookingEnd', e.target.value)}
+                        onChange={(e) => handleEdit(reservationIndex, 'BookingEnd', e.target.value)}
                         required
                       />
                     </td>
 
                     <td>
-                      <p style={timingStyle}>{item.UserID}</p>
+                      <p style={timingStyle}>{reservationRecord.UserID}</p>
                     </td>
 
                     <td>
                       <input
                         type="text"
-                        value={item.BookingStatus}
+                        value={reservationRecord.BookingStatus}
                         name="BookingStatus"
-                        onChange={(e) => handleEdit(item.restaurantID, 'BookingStatus', e.target.value)}
+                        onChange={(e) => handleEdit(reservationIndex, 'BookingStatus', e.target.value)}
                         required
                       />
                     </td>
                     <td>
-                      <button onClick={(e) => handleSubmit(e, item.restaurantID)}>
+                      <button onClick={(e) => handleSubmit(e, reservationIndex)}>
                         Update
                       </button>
                     </td>
 
                     <td>
-                      <button onClick={(e) => handleDelete(e, item.restaurantID)}>
+                      <button onClick={(e) => handleDelete(e, reservationIndex)}>
                         Delete
                       </button>
                     </td>
