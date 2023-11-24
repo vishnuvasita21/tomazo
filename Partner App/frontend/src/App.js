@@ -11,8 +11,8 @@ import UpdateRestaurantInfo from "./views/UpdateRestaurantInfo/UpdateRestaurantI
 import UpdateRestaurantOpen from "./views/UpdateRestaurantOpen/index";
 import UpdateRestaurantStatus from "./views/UpdateRestaurantStatus/index";
 import UpdateReservationStatus from "./views/UpdateReservationStatus/index";
-import AddTable from "./views/AddTable/index";
-import ViewReservationsRestaurant from "./views/ViewReservationsRestaurant/index";
+import AddTable from "./views/AddTable/AddTable";
+import ViewReservationsRestaurant from "./views/ViewReservationsRestaurant/ViewReservationsRestaurant";
 import MenuTypes from "./views/Menu/MenuTypes";
 import MenuPage from "./views/Menu/MenuPage";
 import EditMenu from "./views/Menu/EditMenu";

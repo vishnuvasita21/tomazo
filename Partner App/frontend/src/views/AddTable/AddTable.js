@@ -32,7 +32,7 @@ const logoutButtonStyle = {
 // #REFERENCE: Code and logic modified from:
 // https://herotofu.com/solutions/guides/react-post-form-data-to-api
 
-function UpdateRestaurantInfo() {
+function AddTable() {
   const restaurantId = parseInt(sessionStorage.getItem('rid'));
   const navigate = useNavigate();
   const [data, setData] = useState([]); //useState(null); 
@@ -44,7 +44,8 @@ function UpdateRestaurantInfo() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let ENDPOINT = "https://0520gbfb3k.execute-api.us-east-2.amazonaws.com/getRestaurantByID/";
+        //TODO: Write this endpoint
+        let ENDPOINT = "https://0520gbfb3k.execute-api.us-east-2.amazonaws.com/getTablesByRestaurantID/";
         ENDPOINT = ENDPOINT.concat(restaurantId);
         console.log("Getting API Endpoint: ", ENDPOINT)
         const response = await axios.get(ENDPOINT);
@@ -164,19 +165,19 @@ const handleSubmit = (e) => {
       .then(() => {
         setMessage("Thanks!");
         setStatus('success');
-        alert("Restaurant information updated!");
+        alert("Table information updated!");
       })
       .catch((err) => {
         setMessage(err.toString());
         setStatus('error');
-        alert("Error updating restaurant information!");
+        alert("Error updating table information!");
       });
 
       return { handleSubmit, status, message };
   };
 
 //const FORM_ENDPOINT = "https://0520gbfb3k.execute-api.us-east-2.amazonaws.com/setClose";
-const FORM_ENDPOINT = "https://0520gbfb3k.execute-api.us-east-2.amazonaws.com/updateRestaurantInfo";
+const FORM_ENDPOINT = "https://0520gbfb3k.execute-api.us-east-2.amazonaws.com/addTable";
 
 const handleEdit = (field, value) => {
 
@@ -210,9 +211,7 @@ const handleEdit = (field, value) => {
 
       <div>
 
-        <h1>Update Restaurant Information</h1>
-
-        <img src={data.RestaurantImageURL}alt="Restaurant Image"/>
+        <h1>Update Table Information</h1>
 
         <form
           action={FORM_ENDPOINT}
@@ -220,41 +219,25 @@ const handleEdit = (field, value) => {
           METHOD="PUT"
         >
 
-          <label for="restaurantname">Restaurant Name:</label>
+          <label for="tableid">Table Number:</label>
           <input
             type="text"
-            value={data.RestaurantName}
-            name="RestaurantName"
-            onChange={(e) => handleEdit('RestaurantName', e.target.value)}
+            value={data[0].TableID}
+            name="TableID"
+            //onChange={(e) => handleEdit('TableID', e.target.value)}
             required
           />
           <br/>
 
-          <label for="openhour">Open Hour:</label>
+          <label for="tablecapacity">Table Capacity:</label>
           <input 
-            type="time"
-            name="OpenHour"
-            value={data.OpenHour}
-            onChange={(e) => handleEdit('OpenHour', e.target.value)}
+            type="text"
+            name="TableCapacity"
+            value={data[0].TableCapacity}
+            onChange={(e) => handleEdit('TableCapacity', e.target.value)}
             />
           <br/>
 
-          <label for="closehour">Close Hour:</label>
-          <input 
-            type="time"
-            name="CloseHour"
-            value={data.CloseHour}
-            onChange={(e) => handleEdit('CloseHour', e.target.value)}
-            />
-          <br/>
-
-          <label for="currentlyClosed">Currently Closed:</label>
-          <select id="CurrentlyClosed" name="CurrentlyClosed">
-            <option value="True">True</option>
-            <option value="False">False</option>
-          </select>
-          <br/>
-          
            <input 
              type="hidden"  
              name="RestaurantID" 
@@ -274,4 +257,4 @@ const handleEdit = (field, value) => {
   );
 
 }
-export default UpdateRestaurantInfo;
+export default AddTable;

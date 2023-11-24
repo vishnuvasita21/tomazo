@@ -28,8 +28,6 @@ const logoutButtonStyle = {
   borderRadius: "5px",
 };
 
-
-
 function ViewReservationsRestaurant() {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
@@ -38,8 +36,12 @@ function ViewReservationsRestaurant() {
   //api
   useEffect(() => {
     const fetchData = async () => {
+      const restaurantId = parseInt(sessionStorage.getItem('rid'));
       try {
-        const response = await axios.get('https://us-central1-csci5410-14dd5.cloudfunctions.net/viewReservationsRestaurant?restaurantID=1');
+        let API_ENDPOINT = 'https://us-central1-csci5410-14dd5.cloudfunctions.net/viewReservationsRestaurant?restaurantID='
+        API_ENDPOINT = API_ENDPOINT.concat(restaurantId);
+        console.log("Calling API endpoint: ", API_ENDPOINT);
+        const response = await axios.get(API_ENDPOINT);
         // console.log(JSON.stringify(response.data));
         setData(Object.values(response.data));
       } catch (err) {
