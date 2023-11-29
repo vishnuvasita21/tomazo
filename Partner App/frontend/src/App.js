@@ -60,11 +60,11 @@ function App() {
 
   return (
     <div className="App">
-      <Chatbot/>
+      <Chatbot />
       <Router>
         <Routes>
-        <Route path="/partner-home" element={<HomePage />} />
-          
+          <Route path="/partner-home" element={<HomePage />} />
+
           <Route
             path="/"
             element={
@@ -79,15 +79,30 @@ function App() {
           <Route path="/signup" element={<RegistrationPage />} />
           <Route path="/home" element={<RestaurantList />} />
           <Route path="/menu" element={<MenuTypes />} />
-          <Route path="/updateRestaurantInfo" element={<UpdateRestaurantInfo />} />
-          <Route path="/updateRestaurantOpen" element={<UpdateRestaurantOpen />} />
-          <Route path="/updateRestaurantStatus" element={<UpdateRestaurantStatus />} />
-          <Route path="/updateReservationStatus" element={<UpdateReservationStatus />} />
+          <Route
+            path="/updateRestaurantInfo"
+            element={<UpdateRestaurantInfo />}
+          />
+          <Route
+            path="/updateRestaurantOpen"
+            element={<UpdateRestaurantOpen />}
+          />
+          <Route
+            path="/updateRestaurantStatus"
+            element={<UpdateRestaurantStatus />}
+          />
+          <Route
+            path="/updateReservationStatus"
+            element={<UpdateReservationStatus />}
+          />
           <Route path="/addTable" element={<AddTable />} />
-          <Route path="/viewReservationsRestaurant" element={<ViewReservationsRestaurant />} />
+          <Route
+            path="/viewReservationsRestaurant"
+            element={<ViewReservationsRestaurant />}
+          />
           <Route path="/menuItems" element={<MenuPage />} />
           <Route path="/edit-menu" element={<EditMenu />} />
-          <Route path="/holistic" element= {<Holistic/>}/>
+          <Route path="/holistic" element={<Holistic />} />
           {/* <Route path="/home" element={<RestaurantList />} />
           <Route path="/menu" element={<MenuItem />} /> */}
         </Routes>
