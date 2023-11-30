@@ -36,29 +36,32 @@ build_admin_app:
     changes:
       - Admin App/frontend/**/*
 
-.deploy_script:
+deploy_customer_app:
+  stage: deploy
   script:
     - gcloud auth activate-service-account --key-file gcp-service-key.json
     - gcloud config set project $PROJECT_ID
-    - gcloud run deploy $CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG --image gcr.io/$PROJECT_ID/$CI_PROJECT_NAME-frontend:$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHORT_SHA --region us-central1 --platform managed --allow-unauthenticated
-
-deploy_customer_app:
-  stage: deploy
-  script: *.deploy_script
+    - gcloud run deploy customer-app-frontend-$CI_COMMIT_REF_SLUG --image gcr.io/$PROJECT_ID/customer-app-frontend:$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHORT_SHA --region us-central1 --platform managed --allow-unauthenticated
   only:
     changes:
       - Customer App/frontend/**/*
 
 deploy_partner_app:
   stage: deploy
-  script: *.deploy_script
+  script:
+    - gcloud auth activate-service-account --key-file gcp-service-key.json
+    - gcloud config set project $PROJECT_ID
+    - gcloud run deploy partner-app-frontend-$CI_COMMIT_REF_SLUG --image gcr.io/$PROJECT_ID/partner-app-frontend:$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHORT_SHA --region us-central1 --platform managed --allow-unauthenticated
   only:
     changes:
       - Partner App/frontend/**/*
 
 deploy_admin_app:
   stage: deploy
-  script: *.deploy_script
+  script:
+    - gcloud auth activate-service-account --key-file gcp-service-key.json
+    - gcloud config set project $PROJECT_ID
+    - gcloud run deploy admin-app-frontend-$CI_COMMIT_REF_SLUG --image gcr.io/$PROJECT_ID/admin-app-frontend:$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHORT_SHA --region us-central1 --platform managed --allow-unauthenticated
   only:
     changes:
       - Admin App/frontend/**/*
