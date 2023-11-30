@@ -1,74 +1,44 @@
 stages:
-  - build_and_push
   - deploy
 
-variables:
-  PROJECT_ID: $GCP_PROJECT_ID
-  REGION: us-central1
-
-before_script:
-  - apt-get update && apt-get install -y docker.io
-  - echo $GCP_JSON_KEY | base64 -d | docker login -u _json_key --password-stdin https://gcr.io
-
-build_and_push_customer_app:
-  stage: build_and_push
-  script:
-    - export LOWERCASE_PROJECT_ID=$(echo $PROJECT_ID | awk '{print tolower($0)}')
-    - export LOWERCASE_COMMIT_REF=$(echo $CI_COMMIT_REF_SLUG | awk '{print tolower($0)}')
-    - docker build -t gcr.io/$LOWERCASE_PROJECT_ID/customer-app-frontend:$LOWERCASE_COMMIT_REF-$CI_COMMIT_SHORT_SHA Customer App/frontend/
-    - docker push gcr.io/$LOWERCASE_PROJECT_ID/customer-app-frontend:$LOWERCASE_COMMIT_REF-$CI_COMMIT_SHORT_SHA
-  only:
-    changes:
-      - Customer App/frontend/**/*
-
-build_and_push_partner_app:
-  stage: build_and_push
-  script:
-    - export LOWERCASE_PROJECT_ID=$(echo $PROJECT_ID | awk '{print tolower($0)}')
-    - export LOWERCASE_COMMIT_REF=$(echo $CI_COMMIT_REF_SLUG | awk '{print tolower($0)}')
-    - docker build -t gcr.io/$LOWERCASE_PROJECT_ID/partner-app-frontend:$LOWERCASE_COMMIT_REF-$CI_COMMIT_SHORT_SHA Partner App/frontend/
-    - docker push gcr.io/$LOWERCASE_PROJECT_ID/partner-app-frontend:$LOWERCASE_COMMIT_REF-$CI_COMMIT_SHORT_SHA
-  only:
-    changes:
-      - Partner App/frontend/**/*
-
-build_and_push_admin_app:
-  stage: build_and_push
-  script:
-    - export LOWERCASE_PROJECT_ID=$(echo $PROJECT_ID | awk '{print tolower($0)}')
-    - export LOWERCASE_COMMIT_REF=$(echo $CI_COMMIT_REF_SLUG | awk '{print tolower($0)}')
-    - docker build -t gcr.io/$LOWERCASE_PROJECT_ID/admin-app-frontend:$LOWERCASE_COMMIT_REF-$CI_COMMIT_SHORT_SHA Admin App/frontend/
-    - docker push gcr.io/$LOWERCASE_PROJECT_ID/admin-app-frontend:$LOWERCASE_COMMIT_REF-$CI_COMMIT_SHORT_SHA
-  only:
-    changes:
-      - Admin App/frontend/**/*
-
 deploy_customer_app:
+  image: google/cloud-sdk:latest
   stage: deploy
   script:
-    - gcloud auth activate-service-account --key-file <(echo $GCP_JSON_KEY | base64 -d)
-    - gcloud config set project $PROJECT_ID
-    - gcloud run deploy customer-app-frontend-$CI_COMMIT_REF_SLUG --image gcr.io/$LOWERCASE_PROJECT_ID/customer-app-frontend:$LOWERCASE_COMMIT_REF-$CI_COMMIT_SHORT_SHA --region $REGION --platform managed --allow-unauthenticated
+    - echo $GCP_SERVICE_ACCOUNT_KEY | base64 -d > gcp-key.json
+    - gcloud auth activate-service-account --key-file gcp-key.json
+    - gcloud config set project $GCP_PROJECT_ID
+    - cd csci5410-f23-sdp6\Customer App\frontend
+    - npm install
+    - npm run build
+    - gcloud app deploy app.yaml --quiet
   only:
-    changes:
-      - Customer App/frontend/**/*
+    - main
 
 deploy_partner_app:
+  image: google/cloud-sdk:latest
   stage: deploy
   script:
-    - gcloud auth activate-service-account --key-file <(echo $GCP_JSON_KEY | base64 -d)
-    - gcloud config set project $PROJECT_ID
-    - gcloud run deploy partner-app-frontend-$CI_COMMIT_REF_SLUG --image gcr.io/$LOWERCASE_PROJECT_ID/partner-app-frontend:$LOWERCASE_COMMIT_REF-$CI_COMMIT_SHORT_SHA --region $REGION --platform managed --allow-unauthenticated
+    - echo $GCP_SERVICE_ACCOUNT_KEY | base64 -d > gcp-key.json
+    - gcloud auth activate-service-account --key-file gcp-key.json
+    - gcloud config set project $GCP_PROJECT_ID
+    - cd csci5410-f23-sdp6\Partner App\frontend
+    - npm install
+    - npm run build
+    - gcloud app deploy app.yaml --quiet
   only:
-    changes:
-      - Partner App/frontend/**/*
+    - main
 
 deploy_admin_app:
+  image: google/cloud-sdk:latest
   stage: deploy
   script:
-    - gcloud auth activate-service-account --key-file <(echo $GCP_JSON_KEY | base64 -d)
-    - gcloud config set project $PROJECT_ID
-    - gcloud run deploy admin-app-frontend-$CI_COMMIT_REF_SLUG --image gcr.io/$LOWERCASE_PROJECT_ID/admin-app-frontend:$LOWERCASE_COMMIT_REF-$CI_COMMIT_SHORT_SHA --region $REGION --platform managed --allow-unauthenticated
+    - echo $GCP_SERVICE_ACCOUNT_KEY | base64 -d > gcp-key.json
+    - gcloud auth activate-service-account --key-file gcp-key.json
+    - gcloud config set project $GCP_PROJECT_ID
+    - cd csci5410-f23-sdp6\Admin App\frontend
+    - npm install
+    - npm run build
+    - gcloud app deploy app.yaml --quiet
   only:
-    changes:
-      - Admin App/frontend/**/*
+    - main
