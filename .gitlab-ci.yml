@@ -8,7 +8,7 @@ deploy_customer_app:
     - echo $GCP_SERVICE_ACCOUNT_KEY | base64 -d > gcp-key.json
     - gcloud auth activate-service-account --key-file gcp-key.json
     - gcloud config set project $GCP_PROJECT_ID
-    - cd csci5410-f23-sdp6\Customer App\frontend
+    - cd "csci5410-f23-sdp6/Customer App/frontend"
     - npm install
     - npm run build
     - gcloud app deploy app.yaml --quiet
@@ -22,7 +22,7 @@ deploy_partner_app:
     - echo $GCP_SERVICE_ACCOUNT_KEY | base64 -d > gcp-key.json
     - gcloud auth activate-service-account --key-file gcp-key.json
     - gcloud config set project $GCP_PROJECT_ID
-    - cd csci5410-f23-sdp6\Partner App\frontend
+    - cd "csci5410-f23-sdp6/Partner App/frontend"
     - npm install
     - npm run build
     - gcloud app deploy app.yaml --quiet
@@ -36,7 +36,7 @@ deploy_admin_app:
     - echo $GCP_SERVICE_ACCOUNT_KEY | base64 -d > gcp-key.json
     - gcloud auth activate-service-account --key-file gcp-key.json
     - gcloud config set project $GCP_PROJECT_ID
-    - cd csci5410-f23-sdp6\Admin App\frontend
+    - cd "csci5410-f23-sdp6/Admin App/frontend"
     - npm install
     - npm run build
     - gcloud app deploy app.yaml --quiet
