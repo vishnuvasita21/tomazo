@@ -8,8 +8,7 @@ variables:
 
 before_script:
   - apt-get update && apt-get install -y docker.io
-  - echo $GCP_CLOUD_BUILD_SERVICE_KEY | base64 -d > gcp-service-key.json
-  - cat gcp-service-key.json | docker login -u _json_key --password-stdin https://gcr.io
+  - echo $GCP_JSON_KEY | base64 -d | docker login -u _json_key --password-stdin https://gcr.io
 
 build_and_push_customer_app:
   stage: build_and_push
@@ -47,7 +46,7 @@ build_and_push_admin_app:
 deploy_customer_app:
   stage: deploy
   script:
-    - gcloud auth activate-service-account --key-file gcp-service-key.json
+    - gcloud auth activate-service-account --key-file <(echo $GCP_JSON_KEY | base64 -d)
     - gcloud config set project $PROJECT_ID
     - gcloud run deploy customer-app-frontend-$CI_COMMIT_REF_SLUG --image gcr.io/$LOWERCASE_PROJECT_ID/customer-app-frontend:$LOWERCASE_COMMIT_REF-$CI_COMMIT_SHORT_SHA --region $REGION --platform managed --allow-unauthenticated
   only:
@@ -57,7 +56,7 @@ deploy_customer_app:
 deploy_partner_app:
   stage: deploy
   script:
-    - gcloud auth activate-service-account --key-file gcp-service-key.json
+    - gcloud auth activate-service-account --key-file <(echo $GCP_JSON_KEY | base64 -d)
     - gcloud config set project $PROJECT_ID
     - gcloud run deploy partner-app-frontend-$CI_COMMIT_REF_SLUG --image gcr.io/$LOWERCASE_PROJECT_ID/partner-app-frontend:$LOWERCASE_COMMIT_REF-$CI_COMMIT_SHORT_SHA --region $REGION --platform managed --allow-unauthenticated
   only:
@@ -67,7 +66,7 @@ deploy_partner_app:
 deploy_admin_app:
   stage: deploy
   script:
-    - gcloud auth activate-service-account --key-file gcp-service-key.json
+    - gcloud auth activate-service-account --key-file <(echo $GCP_JSON_KEY | base64 -d)
     - gcloud config set project $PROJECT_ID
     - gcloud run deploy admin-app-frontend-$CI_COMMIT_REF_SLUG --image gcr.io/$LOWERCASE_PROJECT_ID/admin-app-frontend:$LOWERCASE_COMMIT_REF-$CI_COMMIT_SHORT_SHA --region $REGION --platform managed --allow-unauthenticated
   only:
