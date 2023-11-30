@@ -1,0 +1,64 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  PROJECT_ID: $GCP_PROJECT_ID
+
+before_script:
+  - echo $GCP_CLOUD_BUILD_SERVICE_KEY | base64 -d > gcp-service-key.json
+  - docker login -u _json_key --password-stdin https://gcr.io < gcp-service-key.json
+
+build_customer_app:
+  stage: build
+  script:
+    - docker build -t gcr.io/$PROJECT_ID/customer-app-frontend:$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHORT_SHA Customer App/frontend/
+    - docker push gcr.io/$PROJECT_ID/customer-app-frontend:$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHORT_SHA
+  only:
+    changes:
+      - Customer App/frontend/**/*
+
+build_partner_app:
+  stage: build
+  script:
+    - docker build -t gcr.io/$PROJECT_ID/partner-app-frontend:$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHORT_SHA Partner App/frontend/
+    - docker push gcr.io/$PROJECT_ID/partner-app-frontend:$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHORT_SHA
+  only:
+    changes:
+      - Partner App/frontend/**/*
+
+build_admin_app:
+  stage: build
+  script:
+    - docker build -t gcr.io/$PROJECT_ID/admin-app-frontend:$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHORT_SHA Admin App/frontend/
+    - docker push gcr.io/$PROJECT_ID/admin-app-frontend:$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHORT_SHA
+  only:
+    changes:
+      - Admin App/frontend/**/*
+
+.deploy_script:
+  script:
+    - gcloud auth activate-service-account --key-file gcp-service-key.json
+    - gcloud config set project $PROJECT_ID
+    - gcloud run deploy $CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG --image gcr.io/$PROJECT_ID/$CI_PROJECT_NAME-frontend:$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHORT_SHA --region us-central1 --platform managed --allow-unauthenticated
+
+deploy_customer_app:
+  stage: deploy
+  script: *.deploy_script
+  only:
+    changes:
+      - Customer App/frontend/**/*
+
+deploy_partner_app:
+  stage: deploy
+  script: *.deploy_script
+  only:
+    changes:
+      - Partner App/frontend/**/*
+
+deploy_admin_app:
+  stage: deploy
+  script: *.deploy_script
+  only:
+    changes:
+      - Admin App/frontend/**/*
