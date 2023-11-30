@@ -1,44 +1,40 @@
 stages:
   - deploy
 
+before_script:
+  - echo $GCP_SERVICE_ACCOUNT_KEY | base64 -d > gcp-key.json
+  - gcloud auth activate-service-account --key-file gcp-key.json
+  - gcloud config set project $GCP_PROJECT_ID
+
 deploy_customer_app:
-  image: google/cloud-sdk:latest
+  image: node:14
   stage: deploy
   script:
-    - echo $GCP_SERVICE_ACCOUNT_KEY | base64 -d > gcp-key.json
-    - gcloud auth activate-service-account --key-file gcp-key.json
-    - gcloud config set project $GCP_PROJECT_ID
-    - cd "csci5410-f23-sdp6/Customer App/frontend"
+    - cd "Customer App/frontend"
     - npm install
     - npm run build
-    - gcloud app deploy app.yaml --quiet
+    - gcloud app deploy --quiet
   only:
     - main
 
 deploy_partner_app:
-  image: google/cloud-sdk:latest
+  image: node:14
   stage: deploy
   script:
-    - echo $GCP_SERVICE_ACCOUNT_KEY | base64 -d > gcp-key.json
-    - gcloud auth activate-service-account --key-file gcp-key.json
-    - gcloud config set project $GCP_PROJECT_ID
-    - cd "csci5410-f23-sdp6/Partner App/frontend"
+    - cd "Partner App/frontend"
     - npm install
     - npm run build
-    - gcloud app deploy app.yaml --quiet
+    - gcloud app deploy --quiet
   only:
     - main
 
 deploy_admin_app:
-  image: google/cloud-sdk:latest
+  image: node:14
   stage: deploy
   script:
-    - echo $GCP_SERVICE_ACCOUNT_KEY | base64 -d > gcp-key.json
-    - gcloud auth activate-service-account --key-file gcp-key.json
-    - gcloud config set project $GCP_PROJECT_ID
-    - cd "csci5410-f23-sdp6/Admin App/frontend"
+    - cd "Admin App/frontend"
     - npm install
     - npm run build
-    - gcloud app deploy app.yaml --quiet
+    - gcloud app deploy --quiet
   only:
     - main
