@@ -3,8 +3,11 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import axios from "axios";
 import "./App.css";
 import { Link } from "react-router-dom";
+import LoginPage from "./views/Login/index";
+import RegistrationPage from "./views/Registration/index";
+import RestaurantList from "./views/RestaurantList/index";
 import Chatbot from "./Chatbot";
-import image from "../src/assets/tomazo-2.png";
+import image from "./assets/tomazo-1.png";
 
 function LandingPage() {
   return (
@@ -40,7 +43,6 @@ function App() {
 
   return (
     <div className="App">
-      <Chatbot/>
       <Router>
         <Routes>
           <Route
@@ -53,7 +55,11 @@ function App() {
               )
             }
           />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<RegistrationPage />} />
+          <Route path="/home" element={<RestaurantList />} />
         </Routes>
+        <Chatbot />
       </Router>
     </div>
   );
