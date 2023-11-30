@@ -2,21 +2,19 @@ stages:
   - deploy
 
 variables:
-  # Define the default image to use for the jobs, unless overridden
   IMAGE: "google/cloud-sdk"
 
 before_script:
-  # Decode the service account key
   - echo $GCP_SERVICE_ACCOUNT_KEY | base64 -d > gcp-key.json
-  # Authenticate with the Google Cloud SDK
+
   - gcloud auth activate-service-account --key-file gcp-key.json
-  # Set the Google Cloud project ID
+
   - gcloud config set project $GCP_PROJECT_ID
-  # Update the package list
+
   - apt-get update -y
-  # Install Node.js and npm
+
   - apt-get install -y nodejs npm
-  # Check the Node.js and npm versions
+
   - node --version
   - npm --version
 
@@ -41,14 +39,13 @@ deploy_partner_app:
     - gcloud app deploy --quiet
   only:
     - main
-
-deploy_admin_app:
-  image: $IMAGE
-  stage: deploy
-  script:
-    - cd "Admin App/frontend"
-    - npm install
-    - npm run build
-    - gcloud app deploy --quiet
-  only:
-    - main
+# deploy_admin_app:
+#   image: $IMAGE
+#   stage: deploy
+#   script:
+#     - cd "Admin App/frontend"
+#     - npm install
+#     - npm run build
+#     - gcloud app deploy --quiet
+#   only:
+#     - main
