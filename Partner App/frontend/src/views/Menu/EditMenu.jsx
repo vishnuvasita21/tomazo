@@ -9,7 +9,7 @@ const EditMenu = () => {
   const [docId, setDocId] = useState('');
   const [discountValue, setDiscountValue] = useState('');
   const [selectedRows, setSelectedRows] = useState([]);
-  const restaurantId = parseInt(localStorage.getItem('restaurantId'));
+  const restaurantId = parseInt(sessionStorage.getItem('rid'));
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const name = searchParams.get('name');
@@ -35,6 +35,21 @@ const EditMenu = () => {
 
     fetchData();
   }, [restaurantId, name]);
+
+  const areAllFieldsFilled = () => {
+    for (const restaurant of menuData) {
+      for (const menuItem of restaurant.menuItems) {
+        if (
+          menuItem.itemName === '' ||
+          menuItem.price === '' ||
+          menuItem.description === '' 
+        ) {
+          return false;
+        }
+      }
+    }
+    return true;
+  };
 
 
 const handleCheckboxChange = (restaurantIndex, itemIndex) => {
@@ -81,17 +96,32 @@ const handleRemoveItems = () => {
 
   const handleSave = async () => {
     try {
+
+      const allFieldsFilled = areAllFieldsFilled();
+
+    if (!allFieldsFilled) {
+      alert('Please fill in all fields before saving.');
+      return;
+    }
         if (menuExist === 'yes') {
-      await axios.put(
-        `https://us-central1-serverless-401214.cloudfunctions.net/updateRestaurantMenu?docId=${docId}`,
-        menuData[0],
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-      alert('Menu updated successfully!');
+          if (menuData.every(restaurant => restaurant.menuItems.length === 0) && docId) {
+            await axios.delete(
+              `https://us-central1-serverless-401214.cloudfunctions.net/deleteResertaurantMenu?docId=${docId}`
+            );
+            setDocId('');
+          }
+            else{
+              await axios.put(
+                `https://us-central1-serverless-401214.cloudfunctions.net/updateRestaurantMenu?docId=${docId}`,
+                menuData[0],
+                {
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                }
+              );
+              alert('Menu updated successfully!');
+            }
     }
     else{
         const newMenu = {
@@ -167,9 +197,9 @@ const handleRemoveItems = () => {
         type="number"
         value={discountValue}
         onChange={(e) => setDiscountValue(e.target.value)}
-        placeholder="Enter discount percentage (0-100)"
+        placeholder="Enter discount % (0-100)"
       />
-      <button onClick={handleApplyDiscount}>Apply Discount</button>
+      <button onClick={handleApplyDiscount}  style={{ marginRight: '100px' }}>Apply Discount</button>
       <button onClick={handleRemoveItems}>Remove Item</button>
     </div>
     <table className="menu-table">
@@ -188,7 +218,7 @@ const handleRemoveItems = () => {
           {menuData.map((restaurant, restaurantIndex) =>
             restaurant.menuItems.map((menuItem, itemIndex) => (
       
-              <tr key={menuItem.itemName}>
+              <tr key={`${restaurantIndex}-${itemIndex}`}>
                 <td>
                 <input
                 type="checkbox"
@@ -207,7 +237,7 @@ const handleRemoveItems = () => {
                 </td>
                 <td>
                   <input
-                    type="text"
+                    type="number"
                     value={menuItem.price}
                     onChange={(e) => handleEdit(restaurantIndex, itemIndex, 'price', e.target.value)}
                   />
@@ -220,11 +250,13 @@ const handleRemoveItems = () => {
                   />
                 </td>
                 <td>
-                  <input
-                    type="text"
+                  <select
                     value={menuItem.available}
                     onChange={(e) => handleEdit(restaurantIndex, itemIndex, 'available', e.target.value)}
-                  />
+                    >
+                    <option value="true">True</option>
+                    <option value="false">False</option>
+                  </select>
                 </td>
                 <td>
                   <input
