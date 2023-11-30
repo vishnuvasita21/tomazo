@@ -1,37 +1,45 @@
 stages:
-  - build
+  - build_and_push
   - deploy
 
 variables:
   PROJECT_ID: $GCP_PROJECT_ID
+  REGION: us-central1
 
 before_script:
+  - apt-get update && apt-get install -y docker.io
   - echo $GCP_CLOUD_BUILD_SERVICE_KEY | base64 -d > gcp-service-key.json
   - docker login -u _json_key --password-stdin https://gcr.io < gcp-service-key.json
 
-build_customer_app:
-  stage: build
+build_and_push_customer_app:
+  stage: build_and_push
   script:
-    - docker build -t gcr.io/$PROJECT_ID/customer-app-frontend:$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHORT_SHA Customer App/frontend/
-    - docker push gcr.io/$PROJECT_ID/customer-app-frontend:$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHORT_SHA
+    - export SANITIZED_PROJECT_ID=$(echo $PROJECT_ID | tr -cd '[:alnum:]._-')
+    - export SANITIZED_COMMIT_REF=$(echo $CI_COMMIT_REF_SLUG | tr -cd '[:alnum:]._-')
+    - docker build -t gcr.io/$SANITIZED_PROJECT_ID/customer-app-frontend:$SANITIZED_COMMIT_REF-$CI_COMMIT_SHORT_SHA Customer App/frontend/
+    - docker push gcr.io/$SANITIZED_PROJECT_ID/customer-app-frontend:$SANITIZED_COMMIT_REF-$CI_COMMIT_SHORT_SHA
   only:
     changes:
       - Customer App/frontend/**/*
 
-build_partner_app:
-  stage: build
+build_and_push_partner_app:
+  stage: build_and_push
   script:
-    - docker build -t gcr.io/$PROJECT_ID/partner-app-frontend:$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHORT_SHA Partner App/frontend/
-    - docker push gcr.io/$PROJECT_ID/partner-app-frontend:$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHORT_SHA
+    - export SANITIZED_PROJECT_ID=$(echo $PROJECT_ID | tr -cd '[:alnum:]._-')
+    - export SANITIZED_COMMIT_REF=$(echo $CI_COMMIT_REF_SLUG | tr -cd '[:alnum:]._-')
+    - docker build -t gcr.io/$SANITIZED_PROJECT_ID/partner-app-frontend:$SANITIZED_COMMIT_REF-$CI_COMMIT_SHORT_SHA Partner App/frontend/
+    - docker push gcr.io/$SANITIZED_PROJECT_ID/partner-app-frontend:$SANITIZED_COMMIT_REF-$CI_COMMIT_SHORT_SHA
   only:
     changes:
       - Partner App/frontend/**/*
 
-build_admin_app:
-  stage: build
+build_and_push_admin_app:
+  stage: build_and_push
   script:
-    - docker build -t gcr.io/$PROJECT_ID/admin-app-frontend:$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHORT_SHA Admin App/frontend/
-    - docker push gcr.io/$PROJECT_ID/admin-app-frontend:$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHORT_SHA
+    - export SANITIZED_PROJECT_ID=$(echo $PROJECT_ID | tr -cd '[:alnum:]._-')
+    - export SANITIZED_COMMIT_REF=$(echo $CI_COMMIT_REF_SLUG | tr -cd '[:alnum:]._-')
+    - docker build -t gcr.io/$SANITIZED_PROJECT_ID/admin-app-frontend:$SANITIZED_COMMIT_REF-$CI_COMMIT_SHORT_SHA Admin App/frontend/
+    - docker push gcr.io/$SANITIZED_PROJECT_ID/admin-app-frontend:$SANITIZED_COMMIT_REF-$CI_COMMIT_SHORT_SHA
   only:
     changes:
       - Admin App/frontend/**/*
@@ -41,7 +49,7 @@ deploy_customer_app:
   script:
     - gcloud auth activate-service-account --key-file gcp-service-key.json
     - gcloud config set project $PROJECT_ID
-    - gcloud run deploy customer-app-frontend-$CI_COMMIT_REF_SLUG --image gcr.io/$PROJECT_ID/customer-app-frontend:$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHORT_SHA --region us-central1 --platform managed --allow-unauthenticated
+    - gcloud run deploy customer-app-frontend-$CI_COMMIT_REF_SLUG --image gcr.io/$SANITIZED_PROJECT_ID/customer-app-frontend:$SANITIZED_COMMIT_REF-$CI_COMMIT_SHORT_SHA --region $REGION --platform managed --allow-unauthenticated
   only:
     changes:
       - Customer App/frontend/**/*
@@ -51,7 +59,7 @@ deploy_partner_app:
   script:
     - gcloud auth activate-service-account --key-file gcp-service-key.json
     - gcloud config set project $PROJECT_ID
-    - gcloud run deploy partner-app-frontend-$CI_COMMIT_REF_SLUG --image gcr.io/$PROJECT_ID/partner-app-frontend:$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHORT_SHA --region us-central1 --platform managed --allow-unauthenticated
+    - gcloud run deploy partner-app-frontend-$CI_COMMIT_REF_SLUG --image gcr.io/$SANITIZED_PROJECT_ID/partner-app-frontend:$SANITIZED_COMMIT_REF-$CI_COMMIT_SHORT_SHA --region $REGION --platform managed --allow-unauthenticated
   only:
     changes:
       - Partner App/frontend/**/*
@@ -61,7 +69,7 @@ deploy_admin_app:
   script:
     - gcloud auth activate-service-account --key-file gcp-service-key.json
     - gcloud config set project $PROJECT_ID
-    - gcloud run deploy admin-app-frontend-$CI_COMMIT_REF_SLUG --image gcr.io/$PROJECT_ID/admin-app-frontend:$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHORT_SHA --region us-central1 --platform managed --allow-unauthenticated
+    - gcloud run deploy admin-app-frontend-$CI_COMMIT_REF_SLUG --image gcr.io/$SANITIZED_PROJECT_ID/admin-app-frontend:$SANITIZED_COMMIT_REF-$CI_COMMIT_SHORT_SHA --region $REGION --platform managed --allow-unauthenticated
   only:
     changes:
       - Admin App/frontend/**/*
