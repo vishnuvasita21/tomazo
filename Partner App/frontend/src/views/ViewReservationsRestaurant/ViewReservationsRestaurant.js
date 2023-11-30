@@ -45,6 +45,7 @@ function ViewReservationsRestaurant() {
         API_ENDPOINT = API_ENDPOINT.concat(restaurantId);
         console.log("Calling API endpoint: ", API_ENDPOINT);
         const response = await axios.get(API_ENDPOINT);
+        console.log("RESPONSE DATA:");
         console.log(JSON.stringify(response.data));
         setData(Object.values(response.data));
       } catch (err) {
@@ -178,8 +179,14 @@ const handleSubmit = (e, tableIndex) => {
     //const BOOKING_STATUS = dataToSubmit.BookingStatus;
     //console.log("BOOKING_STATUS: ", BOOKING_STATUS);
 
+    // TODO: Write a new endpoint to accept and udpate all fields below.
+    // The thing that made this endpoint work on the google cloud function side,
+    // was including the line res.set('Access-Control-Allow-Origin', "*")
+    // as per the SO answer at: https://stackoverflow.com/questions/35693758/google-cloud-functions-enable-cors
+    // 
+
     let FORM_ENDPOINT = 'https://bookreservation-ez3fpdepla-uc.a.run.app/bookReservation?';
-    FORM_ENDPOINT = FORM_ENDPOINT.concat('userID=' + String(USER_ID)+ '&');
+    FORM_ENDPOINT = FORM_ENDPOINT.concat('userID=1');//'userID=' + String(USER_ID)+ '&');
     FORM_ENDPOINT = FORM_ENDPOINT.concat('restaurantID=' + String(RESTAURANT_ID)+ '&');
     FORM_ENDPOINT = FORM_ENDPOINT.concat('bookingStart=' + String(START_TIME)+ '&');
     FORM_ENDPOINT = FORM_ENDPOINT.concat('bookingEnd=' + String(END_TIME)+ '&');
@@ -194,7 +201,7 @@ const handleSubmit = (e, tableIndex) => {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(dataToSubmit),
+      //body: JSON.stringify(dataToSubmit),
     })
       .then((response) => {
         if (response.status !== 200) {
@@ -211,7 +218,7 @@ const handleSubmit = (e, tableIndex) => {
       .catch((err) => {
         setMessage(err.toString());
         setStatus('error');
-        alert("Error updating table information!");
+        alert(err.toString());//alert("Error updating table information!");
       });
 
       return { handleSubmit, status, message };
@@ -225,13 +232,10 @@ const handleDelete = (e, tableIndex) => {
 
     console.log(e);
 
-    const FORM_ENDPOINT = "https://0520gbfb3k.execute-api.us-east-2.amazonaws.com/addTable";
+    const FORM_ENDPOINT = "https://deletereservation-ez3fpdepla-uc.a.run.app/deleteReservation?documentID=";
 
     let dataToSubmit = data[tableIndex]; // Need to update this with index of current item
 
-    dataToSubmit.RestaurantID = parseInt(restaurantId);
-    dataToSubmit.TableID = parseInt(dataToSubmit.TableID);
-    dataToSubmit.TableCapacity = parseInt(dataToSubmit.TableCapacity);
     console.log("Data submitted with contents: ", dataToSubmit);
 
     fetch(FORM_ENDPOINT, {
