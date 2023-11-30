@@ -21,7 +21,7 @@ initializeApp();
 exports.getReservationDocumentID= onRequest(async (req, res) => {
 
     // Get the userID parameter.
-    const restaurantID = req.query.restaurantID;
+    const restaurantName = req.query.restaurantName;
     const userID = req.query.userID;
     const tableID = req.query.tableID;
     const bookingDate= req.query.bookingDate;
@@ -39,7 +39,7 @@ exports.getReservationDocumentID= onRequest(async (req, res) => {
     const db = getFirestore();
 
     const query = db.collection("Reservations")
-        .where("RestaurantID", "==", parseInt(restaurantID))
+        .where("RestaurantName", "==", restaurantName)
         .where("UserID", "==", parseInt(userID))
         .where("TableID", "==", parseInt(tableID))
         .where("BookingDate", "==", bookingDate)
@@ -56,7 +56,7 @@ exports.getReservationDocumentID= onRequest(async (req, res) => {
       // https://stackoverflow.com/questions/16507222/create-json-object-dynamically-via-javascript-without-concate-strings
       snapshot.forEach((doc) => {
         console.log(doc.id, "=>", doc.data());
-        jsonReturnVals[doc.id] = doc.data();
+        jsonReturnVals["DocumentID"] = doc.id;
       });
     }
     // Send back the contents of the query.
