@@ -85,14 +85,6 @@ function App() {
             element={<UpdateRestaurantInfo />}
           />
           <Route
-            path="/updateRestaurantOpen"
-            element={<UpdateRestaurantOpen />}
-          />
-          <Route
-            path="/updateRestaurantStatus"
-            element={<UpdateRestaurantStatus />}
-          />
-          <Route
             path="/updateReservationStatus"
             element={<UpdateReservationStatus />}
           />
