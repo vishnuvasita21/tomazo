@@ -33,7 +33,7 @@ const logoutButtonStyle = {
 // #REFERENCE: Code and logic modified from:
 // https://herotofu.com/solutions/guides/react-post-form-data-to-api
 
-function UpdateRestaurantOpen() {
+function DeleteReservationRestaurant() {
   const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -149,7 +149,7 @@ function UpdateRestaurantOpen() {
       </div>
 
       <div>
-        <h1>Update Restaurant Open</h1>
+        <h1>Delete Reservation</h1>
 
         <Form />
         
@@ -158,4 +158,4 @@ function UpdateRestaurantOpen() {
   );
 }
 
-export default UpdateRestaurantOpen;
+export default DeleteReservationRestaurant;

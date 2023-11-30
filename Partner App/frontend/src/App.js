@@ -7,12 +7,12 @@ import { Link } from "react-router-dom";
 import LoginPage from "./views/Login/index";
 import RestaurantList from "./views/RestaurantList/index";
 import MenuItem from "./views/reservationMenus/MenuItem";
-import UpdateRestaurantInfo from "./views/UpdateRestaurantInfo/index";
-import UpdateRestaurantOpen from "./views/UpdateRestaurantOpen/index";
-import UpdateRestaurantStatus from "./views/UpdateRestaurantStatus/index";
+import UpdateRestaurantInfo from "./views/UpdateRestaurantInfo/UpdateRestaurantInfo";
+
+
 import UpdateReservationStatus from "./views/UpdateReservationStatus/index";
-import AddTable from "./views/AddTable/index";
-import ViewReservationsRestaurant from "./views/ViewReservationsRestaurant/index";
+import AddTable from "./views/AddTable/AddTable";
+import ViewReservationsRestaurant from "./views/ViewReservationsRestaurant/ViewReservationsRestaurant";
 import MenuTypes from "./views/Menu/MenuTypes";
 import MenuPage from "./views/Menu/MenuPage";
 import EditMenu from "./views/Menu/EditMenu";
@@ -21,6 +21,7 @@ import HomePage from "./views/homePage";
 import RegistrationPage from "../src/views/Registration/index";
 import image from "../src/assets/dine-1.png";
 import Chatbot from "./Chatbot";
+import DeleteReservationRestaurant from "./views/DeleteReservationRestaurant/index"
 
 function LandingPage() {
   return (
@@ -84,17 +85,10 @@ function App() {
             element={<UpdateRestaurantInfo />}
           />
           <Route
-            path="/updateRestaurantOpen"
-            element={<UpdateRestaurantOpen />}
-          />
-          <Route
-            path="/updateRestaurantStatus"
-            element={<UpdateRestaurantStatus />}
-          />
-          <Route
             path="/updateReservationStatus"
             element={<UpdateReservationStatus />}
           />
+          <Route path="/updateReservationStatus" element={<UpdateReservationStatus />} />
           <Route path="/addTable" element={<AddTable />} />
           <Route
             path="/viewReservationsRestaurant"
@@ -102,7 +96,9 @@ function App() {
           />
           <Route path="/menuItems" element={<MenuPage />} />
           <Route path="/edit-menu" element={<EditMenu />} />
+          <Route path="/deleteReservationRestaurant" element={<DeleteReservationRestaurant />} />
           <Route path="/holistic" element={<Holistic />} />
+
           {/* <Route path="/home" element={<RestaurantList />} />
           <Route path="/menu" element={<MenuItem />} /> */}
         </Routes>
