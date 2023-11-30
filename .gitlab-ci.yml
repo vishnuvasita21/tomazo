@@ -24,7 +24,7 @@ deploy_customer_app:
   script:
     - cd "Customer App/frontend"
     - npm install
-    - npm run build
+    - CI=false npm run build
     - gcloud app deploy --quiet
   only:
     - main
@@ -35,7 +35,7 @@ deploy_partner_app:
   script:
     - cd "Partner App/frontend"
     - npm install
-    - npm run build
+    - CI=false npm run build
     - gcloud app deploy --quiet
   only:
     - main
