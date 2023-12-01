@@ -1,0 +1,16 @@
+runtime: nodejs14
+
+handlers:
+  - url: /(.*\.(json|ico|js|css))
+    static_files: build/\1
+    upload: build/(.*\.(json|ico|js|css))
+
+  - url: /.*
+    static_files: build/index.html
+    upload: build/index.html
+
+automatic_scaling:
+  min_idle_instances: automatic
+  max_idle_instances: automatic
+  min_total_instances: 1
+  max_total_instances: automatic
