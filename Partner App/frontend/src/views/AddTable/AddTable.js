@@ -224,16 +224,18 @@ const handleAddTable = () => {
 
         <table>
           <thead>
-            <th>
-              <label for="tableid">Table Number:</label>
-            </th>
-            <th>
-              <label for="tablecapacity">Table Capacity:</label>
-            </th>
+            <tr>
+              <th>
+                <label>Table Number:</label>
+              </th>
+              <th>
+                <label>Table Capacity:</label>
+              </th>
+            </tr>
           </thead>
           <tbody>
             {data.map((tableRecord, tableIndex) => (
-            <tr>
+            <tr key={tableIndex}>
               <td>
                 <input
                   type="text"
