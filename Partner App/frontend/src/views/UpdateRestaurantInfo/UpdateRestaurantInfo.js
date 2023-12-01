@@ -213,81 +213,85 @@ const handleEdit = (field, value) => {
         <h1>Update Restaurant Information</h1>
 
         <img src={data.RestaurantImageURL}alt="Restaurant Image"/>
-        <table>
-          <tbody>
-            <form
-              action={FORM_ENDPOINT}
-              onSubmit={handleSubmit}
-              METHOD="PUT"
-            >
-              <tr>
-                <td>
-                  <label for="restaurantname">Restaurant Name:</label>
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    value={data.RestaurantName}
-                    name="RestaurantName"
-                    onChange={(e) => handleEdit('RestaurantName', e.target.value)}
-                    required
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label for="openhour">Open Hour:</label>
-                </td>
-                <td>
-                  <input 
-                    type="time"
-                    name="OpenHour"
-                    value={data.OpenHour}
-                    onChange={(e) => handleEdit('OpenHour', e.target.value)}
+        <form
+          action={FORM_ENDPOINT}
+          onSubmit={handleSubmit}
+          method="PUT"
+        >
+          <table>
+            <tbody>
+                <tr>
+                  <td>
+                    <label >Restaurant Name:</label>
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      value={data.RestaurantName}
+                      name="RestaurantName"
+                      onChange={(e) => handleEdit('RestaurantName', e.target.value)}
+                      required
                     />
                   </td>
-              </tr>
-              <tr>
-                <td>
-                  <label for="closehour">Close Hour:</label>
-                </td>
-                <td>
-                  <input 
-                    type="time"
-                    name="CloseHour"
-                    value={data.CloseHour}
-                    onChange={(e) => handleEdit('CloseHour', e.target.value)}
+                </tr>
+                <tr>
+                  <td>
+                    <label >Open Hour:</label>
+                  </td>
+                  <td>
+                    <input 
+                      type="time"
+                      name="OpenHour"
+                      value={data.OpenHour}
+                      onChange={(e) => handleEdit('OpenHour', e.target.value)}
+                      />
+                    </td>
+                </tr>
+                <tr>
+                  <td>
+                    <label >Close Hour:</label>
+                  </td>
+                  <td>
+                    <input 
+                      type="time"
+                      name="CloseHour"
+                      value={data.CloseHour}
+                      onChange={(e) => handleEdit('CloseHour', e.target.value)}
+                      />
+                    </td>
+                </tr>
+                <tr>
+                  <td>
+                    <label >Currently Closed:</label>
+                  </td>
+                  <td>
+                    <select id="CurrentlyClosed" name="CurrentlyClosed">
+                      <option value="True">True</option>
+                      <option value="False">False</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                     <input 
+                       type="hidden"  
+                       name="RestaurantID" 
+                       value={parseInt(data.RestaurantID)}
+                     />
+                   </td>
+                 </tr>
+                <tr>
+                  <td>
+                    <input
+                      type="submit"
+                      value="submit"
                     />
                   </td>
-              </tr>
-              <tr>
-                <td>
-                  <label for="currentlyClosed">Currently Closed:</label>
-                </td>
-                <td>
-                  <select id="CurrentlyClosed" name="CurrentlyClosed">
-                    <option value="True">True</option>
-                    <option value="False">False</option>
-                  </select>
-                </td>
-              </tr>
+                </tr>
               
-               <input 
-                 type="hidden"  
-                 name="RestaurantID" 
-                 value={parseInt(data.RestaurantID)}
-
-               />
-
-              <input
-                type="submit"
-                value="submit"
-              />
-
-            </form>
-          </tbody>
-        </table>
-        
+            </tbody>
+          </table>
+        </form>
       </div>
     </div>
   );

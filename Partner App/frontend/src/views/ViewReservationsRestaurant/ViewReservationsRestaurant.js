@@ -284,38 +284,40 @@ const handleDelete = (e, tableIndex) => {
         <h1>Reservations List</h1>
         <table>
           <thead>
-            <th>
-              <label> Restaurant Name </label>
-            </th>
-            <th>
-              <label> Table Number </label>
-            </th>
-            <th>
-              <label> Booking Date </label>
-            </th>
-            <th>
-              <label> Booking Start Time </label>
-            </th>
-            <th>
-              <label> Booking End Time </label>
-            </th>
-            <th>
-              <label> User ID </label>
-            </th>
-            <th>
-              <label> Booking Status </label>
-            </th>        
+          <tr>
+              <th>
+                <label> Restaurant Name </label>
+              </th>
+              <th>
+                <label> Table Number </label>
+              </th>
+              <th>
+                <label> Booking Date </label>
+              </th>
+              <th>
+                <label> Booking Start Time </label>
+              </th>
+              <th>
+                <label> Booking End Time </label>
+              </th>
+              <th>
+                <label> User ID </label>
+              </th>
+              <th>
+                <label> Booking Status </label>
+              </th>  
+            </tr>      
           </thead>
           <tbody>
               {data.map((reservationRecord, reservationIndex) => (
-              <tr>
+              <tr key={reservationIndex}>
 
                     <td>
-                      <p style={timingStyle}>{reservationRecord.RestaurantName}</p>
+                      <p style={timingStyle} key={reservationIndex}>{reservationRecord.RestaurantName}</p>
                     </td>
 
                     <td>
-                      <p style={timingStyle}>{reservationRecord.TableID}</p>
+                      <p style={timingStyle} key={reservationIndex}>{reservationRecord.TableID}</p>
                     </td>
 
                     <td>
@@ -324,6 +326,7 @@ const handleDelete = (e, tableIndex) => {
                         value={reservationRecord.BookingDate}
                         name="BookingDate"
                         onChange={(e) => handleEdit(reservationIndex, 'BookingDate', e.target.value)}
+                        key={reservationIndex}
                         required
                       />
                     </td>
@@ -333,6 +336,7 @@ const handleDelete = (e, tableIndex) => {
                         value={reservationRecord.BookingStart}
                         name="BookingStart"
                         onChange={(e) => handleEdit(reservationIndex, 'BookingStart', e.target.value)}
+                        key={reservationIndex}
                         required
                       />
                     </td>
@@ -342,12 +346,13 @@ const handleDelete = (e, tableIndex) => {
                         value={reservationRecord.BookingEnd}
                         name="BookingEnd"
                         onChange={(e) => handleEdit(reservationIndex, 'BookingEnd', e.target.value)}
+                        key={reservationIndex}
                         required
                       />
                     </td>
 
                     <td>
-                      <p style={timingStyle}>{reservationRecord.UserID}</p>
+                      <p style={timingStyle} key={reservationIndex}>{reservationRecord.UserID}</p>
                     </td>
 
                     <td>
@@ -356,17 +361,18 @@ const handleDelete = (e, tableIndex) => {
                         value={reservationRecord.BookingStatus}
                         name="BookingStatus"
                         onChange={(e) => handleEdit(reservationIndex, 'BookingStatus', e.target.value)}
+                        key={reservationIndex}
                         required
                       />
                     </td>
                     <td>
-                      <button onClick={(e) => handleSubmit(e, reservationIndex)}>
+                      <button key={reservationIndex} onClick={(e) => handleSubmit(e, reservationIndex)}>
                         Update
                       </button>
                     </td>
 
                     <td>
-                      <button onClick={(e) => handleDelete(e, reservationIndex)}>
+                      <button key={reservationIndex} onClick={(e) => handleDelete(e, reservationIndex)}>
                         Delete
                       </button>
                     </td>
