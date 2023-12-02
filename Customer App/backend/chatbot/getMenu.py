@@ -15,6 +15,7 @@ def lambda_handler(event, context):
     }
 
 def get_reservation_menu(reservation_id):
+    
     # API call to fetch the reservation menu
     response = requests.get(f'https://us-central1-serverless-401214.cloudfunctions.net/getReservationMenu?reservationId={reservation_id}')
     
