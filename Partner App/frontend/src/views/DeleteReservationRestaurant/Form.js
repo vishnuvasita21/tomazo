@@ -3,7 +3,7 @@
 
 import FormLogic from "./formLogic"
 
-const FORM_ENDPOINT = "https://0520gbfb3k.execute-api.us-east-2.amazonaws.com/setClose";
+const FORM_ENDPOINT = "https://us-central1-csci5410-14dd5.cloudfunctions.net/deleteReservationRestaurant";
 
 const Form = () => {
 
@@ -12,7 +12,7 @@ const Form = () => {
   if (status === "success") {
     return (
       <>
-        <div className="text-2xl">Closing time updated successfully!</div>
+        <div className="text-2xl">Reservation deleted successfully!</div>
         <div className="text-md">{message}</div>
       </>
     );
@@ -31,19 +31,13 @@ const Form = () => {
         <form
           action={FORM_ENDPOINT}
           onSubmit={handleSubmit}
-          METHOD="PUT"
+          METHOD="DELETE"
         >
-          <input
-            type="text"
-            placeholder="New closing time"
-            name="CloseHour"
-            required
-          />
 
           <input
-            type="number"
-            placeholder="Restaurant ID"
-            name="RestaurantID"
+            type="string"
+            placeholder="Document ID"
+            name="documentID"
             required
           />
 

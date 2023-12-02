@@ -4,6 +4,7 @@
     background-color: #ca3433;;
     color: white;
     padding: 20px;
+    margin-top: 30px;
   }
   
   /* White background for the cards */
@@ -18,4 +19,6 @@
   .card-content:hover {
     background-color: #ffebee;
   }
+
+  ..menu-container h1 {color:white}
   

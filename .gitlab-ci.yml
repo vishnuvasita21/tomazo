@@ -1,0 +1,51 @@
+stages:
+  - deploy
+
+variables:
+  IMAGE: "google/cloud-sdk"
+
+before_script:
+  - echo $GCP_SERVICE_ACCOUNT_KEY | base64 -d > gcp-key.json
+
+  - gcloud auth activate-service-account --key-file gcp-key.json
+
+  - gcloud config set project $GCP_PROJECT_ID
+
+  - apt-get update -y
+
+  - apt-get install -y nodejs npm
+
+  - node --version
+  - npm --version
+
+deploy_customer_app:
+  image: $IMAGE
+  stage: deploy
+  script:
+    - cd "Customer App/frontend"
+    - npm install
+    - CI=false npm run build
+    - gcloud app deploy --quiet
+  only:
+    - main
+
+deploy_partner_app:
+  image: $IMAGE
+  stage: deploy
+  script:
+    - cd "Partner App/frontend"
+    - npm install
+    - CI=false npm run build
+    - gcloud app deploy --quiet
+  only:
+    - main
+# deploy_admin_app:
+#   image: $IMAGE
+#   stage: deploy
+#   script:
+#     - cd "Admin App/frontend"
+#     - npm install
+#     - npm run build
+#     - gcloud app deploy --quiet
+#   only:
+#     - main

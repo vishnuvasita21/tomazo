@@ -5,13 +5,11 @@ const HomePage = () => {
 
     return (
         <div>
-            <h1>Welcome to dine</h1>
+            <h1>Welcome to Dine !</h1>
         <div className="landing-page">
-          <div className="navigation-section">
+          <div className="navigation-section" style={{ paddingTop:120}}>
             <div className="button-card">
-              <Link to="/menu" className="red-button">Menus</Link>
-              <Link to="/menuItems" className="red-button">Menu Items</Link>
-              <Link to="/edit-menu" className="red-button">Edit Menu</Link>
+              <Link to="/menu" className="red-button">Menu</Link>
             </div>
           </div>
           <div className="reservation-section">

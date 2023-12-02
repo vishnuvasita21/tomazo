@@ -17,12 +17,11 @@ function FormLogic() {
       .filter((input) => input.name)
       .reduce((obj, input) => Object.assign(obj, { [input.name]: input.value }), {});
 
+    console.log(data);
     data.RestaurantID = parseInt(data.RestaurantID);
-    data.TableID = parseInt(data.TableID);
-    data.TableCapacity = parseInt(data.TableCapacity);
 
     fetch(finalFormEndpoint, {
-      method: 'PUT',
+      method: 'DELETE',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',

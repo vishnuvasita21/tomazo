@@ -1,5 +1,7 @@
-const admin = require('firebase-admin');
+const admin = require("firebase-admin");
 const {onRequest} = require("firebase-functions/v2/https");
+const logger = require("firebase-functions/logger");
+const cors = require("cors")({ origin: true });
 
 admin.initializeApp();
 console.log('connected')
@@ -7,10 +9,9 @@ console.log('connected')
 const firestore = admin.firestore();
 
 exports.getMenuItems = onRequest(async (request, response) => {
+  cors(request, response, async () => {
   try {
     const reservationId = request.query.reservationId;
-
-    // Query Firestore for menu items based on the reservation ID
     const menuItemsQuery = await firestore
       .collection('reservationMeals')
       .where('reservationId', '==', parseInt(reservationId))
@@ -26,4 +27,6 @@ exports.getMenuItems = onRequest(async (request, response) => {
     console.error('Error fetching reservation meals:', error);
     return response.status(500).json({ error: 'Failed to fetch reservation meals.' });
   }
+})
 });
+

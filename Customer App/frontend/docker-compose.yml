@@ -1,0 +1,13 @@
+version: "3.8"
+services:
+  customer-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - ./Customer App/frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=production
