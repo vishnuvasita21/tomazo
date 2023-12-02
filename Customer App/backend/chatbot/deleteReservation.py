@@ -41,6 +41,7 @@ def delete_reservation(restaurant_name, user_id, table_id, booking_date, booking
         # Handle non-JSON responses from the second API
         if response2.headers.get('Content-Type') == 'application/json':
             try:
+                
                 return response2.json()
             except json.JSONDecodeError:
                 return {'error': 'Invalid JSON response from the delete API', 'status_code': response2.status_code, 'response': response2.text}
