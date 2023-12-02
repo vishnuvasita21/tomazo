@@ -40,6 +40,7 @@ def update_reservation(restaurant_name, user_id, table_id, booking_date, booking
             'bookingStart': booking_start,
             'bookingEnd': booking_end,
             'bookingDate': booking_date
+            
         }
         response2 = requests.get('https://updatereservation-ez3fpdepla-uc.a.run.app/updateReservation', params=params2)
 
