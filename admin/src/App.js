@@ -4,6 +4,7 @@ import image from "../src/Assets/login-gov-600x314.png";
 import { Link } from "react-router-dom";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import AdminLogin from "./views/login/AdminLogin";
+import AdminDashboard from './views/dashboard/dashboard';
 
 
 function LandingPage() {
@@ -28,6 +29,8 @@ function LandingPage() {
   );
 }
 
+
+
 function App() {
   
   return (
@@ -36,6 +39,7 @@ function App() {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<AdminLogin />} />
+          <Route path="/dashboard" element={<AdminDashboard />} />
         </Routes>
       </Router>
     </div>
