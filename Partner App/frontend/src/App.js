@@ -10,7 +10,7 @@ import MenuItem from "./views/reservationMenus/MenuItem";
 import UpdateRestaurantInfo from "./views/UpdateRestaurantInfo/UpdateRestaurantInfo";
 
 
-import UpdateReservationStatus from "./views/UpdateReservationStatus/index";
+
 import AddTable from "./views/AddTable/AddTable";
 import ViewReservationsRestaurant from "./views/ViewReservationsRestaurant/ViewReservationsRestaurant";
 import MenuTypes from "./views/Menu/MenuTypes";
@@ -84,11 +84,8 @@ function App() {
             path="/updateRestaurantInfo"
             element={<UpdateRestaurantInfo />}
           />
-          <Route
-            path="/updateReservationStatus"
-            element={<UpdateReservationStatus />}
-          />
-          <Route path="/updateReservationStatus" element={<UpdateReservationStatus />} />
+
+          
           <Route path="/addTable" element={<AddTable />} />
           <Route
             path="/viewReservationsRestaurant"
