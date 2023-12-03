@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { LexRuntime } from 'aws-sdk';
 import './Chatbot.css';
 
 function ChatbotIcon({ onClick }) {
@@ -13,15 +14,39 @@ function Chatbot({ isVisible }) {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
 
+    const lexRuntime = new LexRuntime({
+        region: 'us-east-1', // Replace with your AWS region
+        credentials: {
+        accessKeyId: 'AKIAQYZLEKL6WKRIKEKU', // Replace with your AWS access key ID
+        secretAccessKey: 'tFObgdQkz1rE7RLiBrOqSIzf3nfvCql5w0wm6d84' // Replace with your AWS secret access key
+    }
+    });
+
+    const sendMessageToLex = async (message) => {
+        const params = {
+            botAlias: 'CustomerAppAlias', // Replace with your bot alias
+            botName: 'CustomerApp', // Replace with your bot name
+            inputText: message, // A test message
+            userId: 'LexDeveloper', // Use a test user ID
+        };
+
+        try {
+            const response = await lexRuntime.postText(params).promise();
+            setMessages(prevMessages => [...prevMessages, { text: message, sender: 'user' }, { text: response.message, sender: 'bot' }]);
+        } catch (error) {
+            console.error('Error sending message to Lex:', error);
+            setMessages(prevMessages => [...prevMessages, { text: "Sorry, I'm having trouble understanding you.", sender: 'bot' }]);
+        }
+    };
+
     const handleInputChange = (e) => {
         setInput(e.target.value);
     };
 
     const handleSend = () => {
         if (input.trim()) {
-            setMessages([...messages, { text: input, sender: 'user' }]);
+            sendMessageToLex(input);
             setInput('');
-            // Add backend interaction logic here
         }
     };
 
