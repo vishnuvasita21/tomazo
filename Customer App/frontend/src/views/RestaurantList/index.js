@@ -35,6 +35,7 @@ function RestaurantList() {
           "https://0520gbfb3k.execute-api.us-east-2.amazonaws.com/getAllRestaurants"
         );
         setData(response.data);
+        console.log(response.data);
       } catch (err) {
         setError(err);
       } finally {
@@ -121,7 +122,7 @@ function RestaurantList() {
         <div style={cardStyle}>
           {data &&
             data.map((item) => (
-              <div style={cardView} key={item.id}>
+              <div style={cardView} key={item.RestaurantID}>
                 <img
                   src={item.RestaurantImageURL}
                   alt={item.RestaurantName}
@@ -130,7 +131,8 @@ function RestaurantList() {
                 <div style={detailsStyle}>
                   <h2 style={titleStyle}>{item.RestaurantName}</h2>
                   <p style={timingStyle}>
-                    Open: {item.Open} - Close: {item.Close}
+                    Open: {item.OpenHour}<br/>
+                    Close: {item.CloseHour}
                   </p>
 
                   <button onClick={() => navigateToMenu(item.RestaurantID)}>
