@@ -12,5 +12,3 @@ handlers:
 automatic_scaling:
   min_idle_instances: automatic
   max_idle_instances: automatic
-  min_total_instances: 1
-  max_total_instances: automatic
