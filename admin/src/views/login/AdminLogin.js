@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { TextField, Button, Box, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import "./AdminLogin.css";
 
 function AdminLogin() {
@@ -7,6 +8,7 @@ function AdminLogin() {
   const [password, setPassword] = useState("");
   const [isValidEmail, setIsValidEmail] = useState(true);
   const [isValidPassword, setIsValidPassword] = useState(true);
+  const navigate = useNavigate();
 
   const validateEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -25,9 +27,17 @@ function AdminLogin() {
     setIsValidPassword(validPassword);
 
     if (validEmail && validPassword) {
+      if (email !== "admin@gmail.com") {
+        console.log("Unauthorized access");
+        window.alert("Unauthorized access");
+        setEmail("");
+        setPassword("");
+      } else {
         console.log("Email:", email);
         console.log("Password:", password);
-      // Here you can add logic for login authentication
+        // Redirect to dashboard
+        navigate("/dashboard");
+      }
     }
   };
 
