@@ -39,13 +39,14 @@ deploy_partner_app:
     - gcloud app deploy --quiet
   only:
     - main
-# deploy_admin_app:
-#   image: $IMAGE
-#   stage: deploy
-#   script:
-#     - cd "Admin App/frontend"
-#     - npm install
-#     - npm run build
-#     - gcloud app deploy --quiet
-#   only:
-#     - main
+
+deploy_admin_app:
+  image: $IMAGE
+  stage: deploy
+  script:
+    - cd "admin"
+    - npm install
+    - CI=false npm run build
+    - gcloud app deploy --quiet
+  only:
+    - main
