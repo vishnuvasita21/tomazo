@@ -1,4 +1,5 @@
 runtime: nodejs14
+service: partner
 
 handlers:
   - url: /(.*\.(json|ico|js|css))
