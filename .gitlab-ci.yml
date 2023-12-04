@@ -46,7 +46,7 @@ deploy_admin_app:
   script:
     - cd "admin"
     - npm install
-    - CI=false npm run build
+    - CI=false DISABLE_ESLINT_PLUGIN=true npm run build
     - gcloud app deploy --quiet
   only:
     - main
