@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import LoginPage from "./views/Login/index";
 import RegistrationPage from "./views/Registration/index";
 import RestaurantList from "./views/RestaurantList/index";
+import ViewReservationsCustomer from "./views/BookReservation/index";
 import Chatbot from "./Chatbot";
 import image from "./assets/tomazo-1.png";
 
@@ -58,6 +59,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<RegistrationPage />} />
           <Route path="/home" element={<RestaurantList />} />
+          <Route path="/bookReservation" element={<ViewReservationsCustomer />} />
         </Routes>
         <Chatbot />
       </Router>

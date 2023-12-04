@@ -28,6 +28,7 @@ function RestaurantList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -48,6 +49,10 @@ function RestaurantList() {
 
   const navigateToMenu = (RestaurantID) => {
     navigate("/menu", { state: { RestaurantID: RestaurantID } });
+  };
+
+  const navigateToBookReservation = (RestaurantID) => {
+    navigate("/bookReservation", { state: { RestaurantID: RestaurantID , UserID: 1 } });
   };
 
   const handleSignOut = async () => {
@@ -137,6 +142,10 @@ function RestaurantList() {
 
                   <button onClick={() => navigateToMenu(item.RestaurantID)}>
                     Menu
+                  </button>
+
+                  <button onClick={() => navigateToBookReservation(item.RestaurantID)}>
+                    Book Reservation
                   </button>
                 </div>
               </div>
