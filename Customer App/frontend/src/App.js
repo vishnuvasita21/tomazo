@@ -8,6 +8,7 @@ import RegistrationPage from "./views/Registration/index";
 import RestaurantList from "./views/RestaurantList/index";
 import Chatbot from "./Chatbot";
 import image from "./assets/tomazo-1.png";
+import MenuItem from "./views/reservationMenus/MenuItem";
 
 function LandingPage() {
   return (
@@ -58,6 +59,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<RegistrationPage />} />
           <Route path="/home" element={<RestaurantList />} />
+		  <Route path="/menu" element={<MenuItem />} />
         </Routes>
         <Chatbot />
       </Router>

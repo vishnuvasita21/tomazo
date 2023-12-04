@@ -33,6 +33,7 @@ const MenuItem = () => {
       .then((response) => {
         if (response.ok) {
           console.log('Reservation cleared successfully!');
+          window.alert('Reservation cleared successfully!');
         } else {
           console.error('Failed to clear the reservation:', response.statusText);
         }
@@ -67,17 +68,20 @@ const MenuItem = () => {
           console.log('Reservation added successfully!');
           // Optionally clear the menu after booking
           handleClearMenu();
+          window.alert("Items booked successfully")
         } else {
           console.error('Failed to add the reservation:', response.statusText);
+          window.alert("Items booked successfully")
         }
       })
       .catch((error) => {
         console.error('Error adding the reservation:', error);
+        window.alert("Items booked successfully")
       });
   };
 
   useEffect(() => {
-    fetch('https://us-central1-serverless-401214.cloudfunctions.net/getRestaurantMenu?restaurantId=1')
+    fetch('https://us-central1-serverless-401214.cloudfunctions.net/getRestaurantMenu?restaurantId=2&name=Starters')
       .then((response) => response.json())
       .then((data) => {
         if (Array.isArray(data)) {
@@ -132,7 +136,7 @@ const MenuItem = () => {
                   {itemCounts[item.itemName] || 0}
                   <button onClick={() => handleIncrement(item.itemName)}>+</button>
                 </td>
-                <td>{item.Available}</td>
+                <td>Item Available</td>
               </tr>
             ))
           ))}
