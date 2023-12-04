@@ -6,8 +6,5 @@ services:
       dockerfile: Dockerfile
     ports:
       - "80:80"
-    volumes:
-      - ./Partner App/frontend:/app
-      - /app/node_modules
     environment:
       - NODE_ENV=production
