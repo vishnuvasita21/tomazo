@@ -15,10 +15,10 @@ function Chatbot({ isVisible }) {
     const [input, setInput] = useState('');
 
     const lexRuntime = new LexRuntime({
-        region: 'us-east-1', // Replace with your AWS region
+        region: 'us-east-1', 
         credentials: {
-        accessKeyId: 'AKIAQYZLEKL6WKRIKEKU', // Replace with your AWS access key ID
-        secretAccessKey: 'tFObgdQkz1rE7RLiBrOqSIzf3nfvCql5w0wm6d84' // Replace with your AWS secret access key
+        accessKeyId: 'AKIAQYZLEKL6WKRIKEKU', 
+        secretAccessKey: 'tFObgdQkz1rE7RLiBrOqSIzf3nfvCql5w0wm6d84' 
     }
     });
 
