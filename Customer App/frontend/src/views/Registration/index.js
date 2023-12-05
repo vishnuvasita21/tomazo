@@ -74,7 +74,7 @@ const Registration = () => {
     ) {
       try {
         await createUserWithEmailAndPassword(auth, email, password);
-        window.location.href = "/home";
+        window.location.href = "/login";
       } catch (error) {
         console.error("Error signing up with email/password:", error);
         alert(error);
