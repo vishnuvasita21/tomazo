@@ -17,17 +17,17 @@ function Chatbot({ isVisible }) {
     const lexRuntime = new LexRuntime({
         region: 'us-east-1', 
         credentials: {
-        accessKeyId: 'AKIAQYZLEKL6WKRIKEKU', 
-        secretAccessKey: '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' 
+        accessKeyId: '', 
+        secretAccessKey: '' 
     }
     });
 
     const sendMessageToLex = async (message) => {
         const params = {
-            botAlias: 'CustomerAppAlias', // Replace with your bot alias
-            botName: 'CustomerApp', // Replace with your bot name
+            botAlias: '', // Replace with your bot alias
+            botName: '', // Replace with your bot name
             inputText: message, // A test message
-            userId: 'LexDeveloper', // Use a test user ID
+            userId: '', // Use a test user ID
         };
 
         try {
